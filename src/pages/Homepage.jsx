@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import Contents from '../components/contents'
 import Header from '../components/header'
 import LeftSidebar from '../components/left-sidebar'
-import Contents from '../components/contents'
-import UpNext from '../components/up-next'
+import ComingSoon from '../components/modals/coming-soon'
 import LoginModal from '../components/modals/login-modal'
 import UploadModal from '../components/modals/upload-modal'
-import { Link } from 'react-router-dom'
-import ComingSoon from '../components/modals/coming-soon'
+import UpNext from '../components/up-next'
 
 const Homepage = () => {
+    
     const [bar, setBar] = React.useState(true)
     const handleBar = () => {
         setBar(!bar)
