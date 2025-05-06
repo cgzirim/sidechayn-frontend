@@ -1,0 +1,184 @@
+.animated-button {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  padding: 0.5rem 1rem;
+  border-radius: 3rem;
+  text-decoration: none;
+  transform-style: preserve-3d;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #002575, transparent);
+}
+
+.shapes-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  opacity: 0.3;
+  filter: blur(30px);
+  mix-blend-mode: screen;
+}
+
+/* .purple {
+  background: #8f00ff;
+  top: 10%;
+  left: 10%;
+  animation: rotate 12s linear infinite;
+} */
+
+.blue {
+  background: #00cfff;
+  bottom: 15%;
+  right: 15%;
+  animation: rotate-reverse 18s linear infinite;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* /* The CSS code block you provided defines a CSS class named `.orange`. This class sets the
+background color to `#ff8a00`, positions the element at 50% from the top and 50% from the left of
+its containing element, and uses the `transform` property to horizontally and vertically center
+the element using `translate(-50%, -50%)`. */
+.orange {
+  background: #ff8a00;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: float 8s ease-in-out infinite;
+}
+
+* .noise {
+  position: absolute;
+  inset: 0;
+  background: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.07;
+  z-index: 3;
+  mix-blend-mode: overlay;
+}
+
+.text-wrapper {
+  position: relative;
+  z-index: 4;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.2px;
+  transition: transform 0.3s ease;
+}
+
+.animated-button:hover .text-wrapper {
+  transform: scale(1.05);
+}
+
+.file_upload:hover {
+  background-image: linear-gradient(45deg, #000000bf 15%, #fff0),
+    radial-gradient(circle, #868686 1%, #e6e6e60d 31%, #fff0);
+}
+
+.uploader {
+  cursor: pointer;
+  border: 1px dashed #666;
+  border-radius: 8px;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+}
+
+.uploader_content {
+  opacity: 0.66;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+}
+
+.image_icon {
+  width: 70px;
+  height: 70px;
+}
+
+.text-size-small {
+  color: #d1d1d1;
+  font-family: Raleway, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.text-color-grey.text-size-tiny {
+  color: #999;
+}
+
+.upload_button.is-blue {
+  background-color: #4c33fd00;
+  background-image: linear-gradient(45deg, #2455ff, #652eff);
+  box-shadow: none;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-style: normal;
+  transition-property: none;
+  display: block;
+}
+
+img.w-5.h-5.rounded-full.object-cover.pp-img {
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  width: 35px;
+  height: 35px;
+  z-index: 99999;
+  transform: translateX(-50%);
+  border: 5px solid black;
+}
+
+/* Animations */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes rotate-reverse {
+  0% {
+    transform: rotate(360deg) scale(1.1);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(-20px);
+  }
+}
