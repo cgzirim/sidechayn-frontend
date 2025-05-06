@@ -1,7 +1,0 @@
-@media screen and (max-width: 992px) {
-    .login-modal {
-        z-index: 999999999999999999;
-        max-width: 93%;
-        max-height: 90%;
-    }
-}
