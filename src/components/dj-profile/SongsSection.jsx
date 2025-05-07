@@ -3,22 +3,8 @@ import userAvatar from "../../assets/user-avatar.jpg";
 import useSongs from "../../api/hooks/songs/useSongs";
 import SongUpload from "./SongUpload";
 import { BiPlus } from "react-icons/bi";
-import EmptyState from "../EmptyState";
-
-const songs = [
-  {
-    title: "Chill Vibes",
-    duration: "3:45",
-    cover:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-  },
-  {
-    title: "Party Starter",
-    duration: "4:10",
-    cover:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-  },
-];
+import EmptyState from "../States/EmptyState";
+import LoadingState from "../States/LoadingState";
 
 const SongsSection = () => {
   const [showModal, setShowModal] = useState(false);
@@ -26,11 +12,7 @@ const SongsSection = () => {
   const { data: songs, isLoading } = useSongs();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   return (

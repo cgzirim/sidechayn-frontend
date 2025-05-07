@@ -8,6 +8,7 @@ import LoginModal from "../components/modals/login-modal";
 import UploadModal from "../components/modals/upload-modal";
 import UpNext from "../components/up-next";
 import useBearer from "../api/hooks/useBearer";
+import { useAuth } from "../api/hooks/useAuth";
 
 const Homepage = () => {
   const b = useBearer();
@@ -34,6 +35,10 @@ const Homepage = () => {
   };
 
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
+  const { isAuthenticated } = useAuth();
+
+  console.log("isAuthenticated => ", isAuthenticated);
+
   const [modalStep, setModalStep] = useState(1);
   const handleClick = () => {
     setUploadModalVisible(!uploadModalVisible);
@@ -80,7 +85,7 @@ const Homepage = () => {
             }`}
           >
             <LeftSidebar
-              loggedIn={false}
+              loggedIn={isAuthenticated}
               bar={bar}
               handleBar={handleBar}
               setBar={setBar}
