@@ -13,6 +13,7 @@ import Input from "../inputs/Input";
 import { FileUploader } from "react-drag-drop-files";
 import { fileTypes } from "../modals/upload-modal/StepTwoFields";
 import DateInput from "../inputs/DateInput";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AlbumUploadModal = ({
   modalStep,
@@ -21,6 +22,8 @@ const AlbumUploadModal = ({
   //   handleSubmit,
   setModalStep,
 }) => {
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
   const methods = useForm({
     defaultValues: {
@@ -59,8 +62,8 @@ const AlbumUploadModal = ({
         },
       });
 
-      console.log("createdSong by backend", createdSong);
       handleClose();
+      queryClient.invalidateQueries({ queryKey: ["tags"] });
       return navigate("/profile");
     } catch (err) {
       setIsCreatingSong(false);

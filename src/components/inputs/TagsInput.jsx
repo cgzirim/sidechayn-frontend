@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useController } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
-import axios from "axios";
 import useTags from "../../api/hooks/tags/useTags";
 
 const TagsInput = ({ name, control, label }) => {
@@ -9,18 +8,21 @@ const TagsInput = ({ name, control, label }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const { data: tags, isLoading } = useTags({ limit: 500 });
-
   const availableTags = tags ? tags.results : [];
 
+  // Find full tag object by id
+  const selectedTags = availableTags.filter((tag) =>
+    field.value.includes(tag.id)
+  );
+
   const addTag = (tag) => {
-    console.log("TAG => ", tag);
-    if (!field.value.some((t) => t.id === tag.id)) {
-      field.onChange([...field.value, tag]);
+    if (!field.value.includes(tag.id)) {
+      field.onChange([...field.value, tag.id]);
     }
   };
 
   const removeTag = (id) => {
-    field.onChange(field.value.filter((t) => t.id !== id));
+    field.onChange(field.value.filter((tagId) => tagId !== id));
   };
 
   return (
@@ -33,7 +35,7 @@ const TagsInput = ({ name, control, label }) => {
         onClick={() => setDropdownOpen((prev) => !prev)}
         className="flex flex-wrap items-center gap-2 p-2 bg-[#222] rounded-md border border-[#333] cursor-pointer"
       >
-        {field.value.map((tag) => (
+        {selectedTags.map((tag) => (
           <div
             key={tag.id}
             className="flex items-center gap-1 px-2 py-1 rounded bg-[#333] text-white text-sm"
@@ -52,14 +54,14 @@ const TagsInput = ({ name, control, label }) => {
           </div>
         ))}
         <span className="text-sm text-gray-400">
-          {field.value.length === 0 ? "Select tags..." : ""}
+          {selectedTags.length === 0 ? "Select tags..." : ""}
         </span>
       </div>
 
       {dropdownOpen && (
         <div className="absolute z-10 mt-1 max-h-48 overflow-y-auto w-full bg-[#1e1e1e] border border-[#333] rounded-md shadow-lg">
           {availableTags.map((tag) => {
-            const alreadySelected = field.value.some((t) => t.id === tag.id);
+            const alreadySelected = field.value.includes(tag.id);
             return (
               <div
                 key={tag.id}
