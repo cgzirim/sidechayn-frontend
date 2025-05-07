@@ -11,7 +11,6 @@ const Genres = () => {
 
   if (data?.results?.length === 0) return <div>No genres found</div>;
 
-  console.log("first", data);
   if (data?.results?.length > 0)
     return (
       <div className="left w-full xl:min-w-9/12 ">

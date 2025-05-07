@@ -14,7 +14,6 @@ import i3 from "../assets/i3.webp";
 import i4 from "../assets/i4.webp";
 import UpcomingArtist from "../components/upcoming-artist";
 import LikedSong from "../components/liked-song";
-import Genre from "../components/genre";
 import LoginModal from "../components/modals/login-modal";
 import UploadModal from "../components/modals/upload-modal";
 import ComingSoon from "../components/modals/coming-soon";

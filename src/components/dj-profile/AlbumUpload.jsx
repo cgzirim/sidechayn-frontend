@@ -4,7 +4,7 @@ import { FaTimes, FaTrash } from "react-icons/fa";
 import "../../components/modals/upload-modal/upload-modal.css";
 import upload from "../../assets/upload.svg";
 
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import apiClient from "../../api/apiClient";
 import { useNavigate } from "react-router-dom";
 import useBearer from "../../api/hooks/useBearer";
@@ -34,7 +34,7 @@ const AlbumUploadModal = ({
     },
   });
 
-  const { handleSubmit, trigger, getFieldState } = methods;
+  const { handleSubmit, control, setValue, trigger, getFieldState } = methods;
 
   const [isCreatingSong, setIsCreatingSong] = useState(false);
   const bearer = useBearer();
@@ -42,17 +42,17 @@ const AlbumUploadModal = ({
 
   const onSubmit = async (data) => {
     setIsCreatingSong(true);
-
+    const d = new Date(data.release_date);
     formData.append("title", data.title);
     formData.append("description", data.description);
-    formData.append("key", data.key);
-    formData.append("bpm", data.bpm);
-    formData.append("genre", data.genre);
+    formData.append(
+      "release_date",
+      `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+    );
     formData.append("cover_image", data.cover_image);
-    formData.append("audio_file", data.audio_file);
 
     try {
-      const createdSong = await apiClient.post(`songs/`, formData, {
+      const createdSong = await apiClient.post(`albums/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           ...bearer,
@@ -60,8 +60,8 @@ const AlbumUploadModal = ({
       });
 
       console.log("createdSong by backend", createdSong);
-
-      navigate("/explore");
+      handleClose();
+      return navigate("/profile");
     } catch (err) {
       setIsCreatingSong(false);
       console.log("Something went wrong", err);
@@ -96,46 +96,85 @@ const AlbumUploadModal = ({
   const handleChange1 = (file) => {
     simulateLoading(setProgressAlbum, setIsLoadingAlbum, () => {
       setAlbumArt(file);
-      //   setValue("cover_image", file); // update form state
+      setValue("cover_image", file); // update form state
     });
   };
 
   return (
     <ModalContainer
-      title="Create a new Album"
+      title="Create a new album"
       caption="Share your music album with the whole world!"
       handleClose={handleClose}
     >
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="my-4">
-          <Input label="Title" />
-          <Input label="Description" />
+          <Controller
+            name="title"
+            control={control}
+            render={({ fieldState, field }) => (
+              <Input {...field} label="Title" />
+            )}
+          />
+
+          <Controller
+            name="description"
+            control={control}
+            render={({ fieldState, field }) => (
+              <Input {...field} label="Description" />
+            )}
+          />
 
           <div>
             <label htmlFor="" className="text-white text-[17px]">
               Cover art
             </label>
-            <FileUploader
-              handleChange={handleChange1}
-              classes="file_upload cover-art"
-              types={fileTypes}
-              children={
-                <div className="flex justify-center items-center flex-col pt-4">
-                  <img src={upload} alt="" className="w-[70px] h-[70px]" />
-                  <p className="text-sm text-[#d1d1d1] mt-0">
-                    Drag your file here
-                  </p>
-                  <p className="text-xs text-[#999] pb-5">
-                    ....or click to open browser
-                  </p>
-                </div>
-              }
+
+            <Controller
+              name="cover_image"
+              control={control}
+              render={({ fieldState, field }) => (
+                <FileUploader
+                  {...field}
+                  handleChange={handleChange1}
+                  classes="file_upload cover-art"
+                  types={fileTypes}
+                  children={
+                    <div className="flex justify-center items-center flex-col pt-4">
+                      <img src={upload} alt="" className="w-[70px] h-[70px]" />
+                      <p className="text-sm text-[#d1d1d1] mt-0">
+                        Drag your file here
+                      </p>
+                      <p className="text-xs text-[#999] pb-5">
+                        ....or click to open browser
+                      </p>
+                    </div>
+                  }
+                />
+              )}
             />
           </div>
 
-          <div className=" my-2">
-            <DateInput label="Release Date" name="release_date" />
-          </div>
+          <Controller
+            name="release_date"
+            control={control}
+            render={({ fieldState, field }) => (
+              <div className="my-2">
+                <DateInput
+                  {...field}
+                  label="Release Date"
+                  name="release_date"
+                />
+              </div>
+            )}
+          />
+
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="cursor-pointer hover:scale-105 transition-all duration-500 upload_button is-blue w-button inline-block w-[100px] px-1 text-center py-2 text-sm rounded-xl ml-auto"
+          >
+            Upload
+          </button>
         </form>
       </FormProvider>
     </ModalContainer>

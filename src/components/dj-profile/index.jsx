@@ -3,7 +3,7 @@ import { FaHeart } from "react-icons/fa";
 import userAvatar from "../../assets/user-avatar.jpg";
 import UserCard from "../user-card";
 import UploadsSection from "./UploadsSection";
-import SongShowcase from "./SongShowcase";
+import SongShowcase from "./SongsSection";
 
 const TABS = ["All", "Playlists", "Users", "Uploads", "Achievements"];
 

@@ -110,7 +110,18 @@ export const useAuth = () => {
         );
 
         setUserInfo({
-          user: { id: userData.user.id },
+          user: {
+            id: userData.user.id,
+            // stats: userData.user.stats,
+            // email: userData.user.email,
+            // date_joined: userData.user.date_joined,
+            // name: userData.user.name,
+            // username: userData.user.username,
+            // bio: userData.user.bio,
+            // location: userData.user.location,
+            // picture: userData.user.picture,
+            // is_private: userData.user.is_private,
+          },
         });
 
         setIsLoginSuccessful(true);
