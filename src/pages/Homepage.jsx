@@ -11,6 +11,8 @@ import useBearer from "../api/hooks/useBearer";
 import { useAuth } from "../api/hooks/useAuth";
 
 const Homepage = () => {
+  const { isAuthenticated } = useAuth();
+
   const b = useBearer();
 
   const [bar, setBar] = React.useState(true);
@@ -35,9 +37,6 @@ const Homepage = () => {
   };
 
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
-  const { isAuthenticated } = useAuth();
-
-  console.log("isAuthenticated => ", isAuthenticated);
 
   const [modalStep, setModalStep] = useState(1);
   const handleClick = () => {
