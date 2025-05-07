@@ -5,21 +5,8 @@ import UserCard from "../user-card";
 import UploadsSection from "./UploadsSection";
 import SongShowcase from "./SongShowcase";
 import DJSongList from "./DJSongList";
-
-const songs = [
-  {
-    title: "Chill Vibes",
-    duration: "3:45",
-    cover_image:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-  },
-  {
-    title: "Party Starter",
-    duration: "4:10",
-    cover_image:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-  },
-];
+import useAuthUser from "../../api/hooks/useAuthUser";
+import ProfileCardHeader from "./ProfileCardHeader";
 
 const TABS = ["All", "Playlists", "Users", "Uploads", "Achievements"];
 
@@ -42,26 +29,28 @@ const PlaylistSection = () => (
   </div>
 );
 
-const UsersSection = () => (
-  <div className="text-white space-y-10 mt-6">
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Liked By DJ Daniel</h2>
-      <div className="grid lg:grid-cols-2 gap-4">
-        <UserCard name="Timmy Trumpet" listeners="12M" icon="📊" />
-        <UserCard name="Ariana Grande" listeners="12M" icon="🔥" />
-        <UserCard name="HEAP" listeners="12M" icon="🧱" />
+const UsersSection = () => {
+  return (
+    <div className="text-white space-y-10 mt-6">
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Liked By DJ Daniel</h2>
+        <div className="grid lg:grid-cols-2 gap-4">
+          <UserCard name="Timmy Trumpet" listeners="12M" icon="📊" />
+          <UserCard name="Ariana Grande" listeners="12M" icon="🔥" />
+          <UserCard name="HEAP" listeners="12M" icon="🧱" />
+        </div>
+      </div>
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Likers Of DJ Daniel</h2>
+        <div className="grid lg:grid-cols-2 gap-4">
+          <UserCard name="Timmy Trumpet" listeners="12M" icon="📊" />
+          <UserCard name="Ariana Grande" listeners="12M" icon="🔥" />
+          <UserCard name="HEAP" listeners="12M" icon="🧱" />
+        </div>
       </div>
     </div>
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Likers Of DJ Daniel</h2>
-      <div className="grid lg:grid-cols-2 gap-4">
-        <UserCard name="Timmy Trumpet" listeners="12M" icon="📊" />
-        <UserCard name="Ariana Grande" listeners="12M" icon="🔥" />
-        <UserCard name="HEAP" listeners="12M" icon="🧱" />
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 const DJProfile = () => {
   const [activeTab, setActiveTab] = useState("All");
@@ -111,18 +100,8 @@ const DJProfile = () => {
   return (
     <div className="min-h-screen bg-black text-white px-4 py-10 font-sans">
       {/* Profile Section */}
-      <div className="flex flex-col items-center text-center">
-        <img
-          src={userAvatar}
-          alt="DJ"
-          className="w-28 h-28 rounded-full object-cover mb-4"
-        />
-        <h2 className="text-2xl font-semibold">DJ Daniel</h2>
-        <button className="flex items-center gap-2 mt-1 text-sm bg-[#1a1a1a] px-4 py-1 rounded-full">
-          <FaHeart className="text-pink-500" />
-          11k
-        </button>
-      </div>
+
+      <ProfileCardHeader />
 
       {/* Tabs */}
       <div className="flex justify-center mt-10 space-x-5 lg:space-x-8 text-gray-400 border-b border-[#2e2e2e] pb-2">

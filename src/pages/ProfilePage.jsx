@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import Header from "../components/header";
 import LeftSidebar from "../components/left-sidebar";
 import DJProfile from "../components/dj-profile";
-import { Link } from "react-router-dom";
 import LoginModal from "../components/modals/login-modal";
 import UploadModal from "../components/modals/upload-modal";
 import ComingSoon from "../components/modals/coming-soon";
 import Footer from "./components/Footer";
+import { useAuth } from "../api/hooks/useAuth";
+import useAuthUser from "../api/hooks/useAuthUser";
 
 const Profile = () => {
+  const { isAuthenticated } = useAuth();
+
   const [mobileSidebar, setMobileSidebar] = React.useState(true);
   const handleMobileSidebar = () => {
     setMobileSidebar(!mobileSidebar);
@@ -78,7 +81,7 @@ const Profile = () => {
             }`}
           >
             <LeftSidebar
-              loggedIn={false}
+              loggedIn={isAuthenticated}
               bar={bar}
               handleBar={handleBar}
               setBar={setBar}
