@@ -24,13 +24,16 @@ const TrendingPlayList = () => {
         <SiEmptyState>No Playlists yet!</SiEmptyState>
       ) : (
         <div className="grid mt-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-3">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {playlists.results.map((playlist, index) => (
             // <Genre key={index} />
-            <div className="item cursor-pointer hover:scale-105 transition-all duration-500 h-[165px] overflow-hidden relative rounded-[20px]">
+            <div
+              key={index}
+              className="item cursor-pointer hover:scale-105 transition-all duration-500 h-[165px] overflow-hidden relative rounded-[20px]"
+            >
               <img
-                src={playlistImg}
+                src={playlist.cover_image}
                 className="w-full h-[165px] object-cover"
-                alt=""
+                alt={playlist.name}
               />
               <img
                 src={genresImg}
@@ -39,7 +42,7 @@ const TrendingPlayList = () => {
               />
               <div className="blur-holder">
                 <div className="blur playlist"></div>
-                <div className="text-block playlist">gym playlist 69</div>
+                <div className="text-block playlist">{playlist.name}</div>
               </div>
             </div>
           ))}
