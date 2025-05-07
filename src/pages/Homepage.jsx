@@ -13,6 +13,8 @@ import { useAuth } from "../api/hooks/useAuth";
 const Homepage = () => {
   const { isAuthenticated } = useAuth();
 
+  const isAuth = isAuthenticated();
+
   const b = useBearer();
 
   const [bar, setBar] = React.useState(true);
@@ -84,7 +86,7 @@ const Homepage = () => {
             }`}
           >
             <LeftSidebar
-              loggedIn={isAuthenticated}
+              loggedIn={isAuth}
               bar={bar}
               handleBar={handleBar}
               setBar={setBar}
