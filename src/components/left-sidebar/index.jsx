@@ -6,10 +6,11 @@ import savedTracksIcon from "../../assets/saved-tracks.png";
 import achievementsIcon from "../../assets/achievements.png";
 import settingsIcon from "../../assets/settings.png";
 import AnimatedButton from "../animated-button";
-import userAvatar from "../../assets/user-avatar.jpg";
 
 import "./left-sidebar.css";
 import { FaChevronLeft } from "react-icons/fa";
+import LoginRegButton from "../buttons/LoginRegButton";
+import UserProfileCard from "../cards/UserProfileCard";
 
 const LeftSidebar = ({
   loggedIn,
@@ -56,49 +57,9 @@ const LeftSidebar = ({
   return (
     <div className="px-4 py-5">
       {loggedIn ? (
-        <div className="flex justify-start items-center gap-3">
-          <button
-            className="lg:hidden block mr-5"
-            onClick={handleMobileSidebar}
-          >
-            <FaChevronLeft className="text-[#ffffff9c] text-2xl" />
-          </button>
-          <Link
-            to={"/profile"}
-            className="flex justify-start items-center gap-3 flex px-1 py-2"
-            onClick={handleMobileSidebar}
-          >
-            {/* back button */}
-
-            <img
-              src={userAvatar}
-              className="w-[50px] h-[50px] rounded"
-              alt=""
-            />
-            <span>Jack Wordby</span>
-          </Link>
-        </div>
+        <UserProfileCard handleMobileSidebar={handleMobileSidebar} />
       ) : (
-        <>
-          <button
-            className="lg:hidden block mr-5"
-            onClick={handleMobileSidebar}
-          >
-            <FaChevronLeft className="text-[#ffffff9c] text-2xl" />
-          </button>
-          <p
-            className="register-button cursor-pointer mt-5 flex justify-center items-center flex-col px-1 py-2"
-            // onClick={() => setModalVisible(true)}
-            onClick={() => navigate("/login", { replace: true })}
-          >
-            <span>
-              Register / Login <br />
-            </span>
-            <span className="text-[9px]" style={{ letterSpacing: "2px" }}>
-              Join 12 New Users This Week
-            </span>
-          </p>
-        </>
+        <LoginRegButton handleMobileSidebar={handleMobileSidebar} />
       )}
 
       <div className="line bg-[#eeedf22e] h-[2px] my-6"></div>

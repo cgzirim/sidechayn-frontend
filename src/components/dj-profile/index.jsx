@@ -3,7 +3,23 @@ import { FaHeart } from "react-icons/fa";
 import userAvatar from "../../assets/user-avatar.jpg";
 import UserCard from "../user-card";
 import UploadsSection from "./UploadsSection";
-import SongShowcase from "./SongsSection";
+import SongShowcase from "./SongShowcase";
+import DJSongList from "./DJSongList";
+
+const songs = [
+  {
+    title: "Chill Vibes",
+    duration: "3:45",
+    cover_image:
+      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
+  },
+  {
+    title: "Party Starter",
+    duration: "4:10",
+    cover_image:
+      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
+  },
+];
 
 const TABS = ["All", "Playlists", "Users", "Uploads", "Achievements"];
 
@@ -19,7 +35,7 @@ const PlaylistSection = () => (
     <div>
       <h2 className="text-xl font-semibold mb-2">Custom Playlists</h2>
       <p className="text-lg">
-        • Daniel’s Dropz
+        • Daniel's Dropz
         <br />• Night Drives
       </p>
     </div>
@@ -74,16 +90,7 @@ const DJProfile = () => {
             </div>
 
             {/* Songs & Last Active */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2 bg-[#161616] rounded-xl p-6 space-y-4">
-                {[1, 2].map((item, i) => (
-                  <SongShowcase key={i} />
-                ))}
-              </div>
-              <div className="bg-[#161616] rounded-xl p-6 text-center">
-                <p className="text-gray-400 text-sm">Last Active</p>
-              </div>
-            </div>
+            <DJSongList />
           </div>
         );
       case "Playlists":

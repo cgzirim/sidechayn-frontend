@@ -4,7 +4,7 @@ import AlbumUploadModal from "./AlbumUpload";
 import useAlbums from "../../api/hooks/albums/useAlbums";
 import useAuthUser from "../../api/hooks/useAuthUser";
 
-import EmptyState from "../EmptyState";
+import EmptyState from "../States/EmptyState";
 
 const AlbumsSection = () => {
   const [showModal, setShowModal] = useState(false);
