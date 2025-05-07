@@ -12,6 +12,8 @@ import useAuthUser from "../api/hooks/useAuthUser";
 const Profile = () => {
   const { isAuthenticated } = useAuth();
 
+  const isAuth = isAuthenticated();
+
   const [mobileSidebar, setMobileSidebar] = React.useState(true);
   const handleMobileSidebar = () => {
     setMobileSidebar(!mobileSidebar);
@@ -81,7 +83,7 @@ const Profile = () => {
             }`}
           >
             <LeftSidebar
-              loggedIn={isAuthenticated}
+              loggedIn={isAuth}
               bar={bar}
               handleBar={handleBar}
               setBar={setBar}
