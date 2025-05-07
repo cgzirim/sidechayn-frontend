@@ -5,7 +5,6 @@ import Search from "../components/contents/search";
 import { Link } from "react-router-dom";
 
 import genresImg from "../assets/genres.jpg";
-import playlistImg from "../assets/playlist-1.jpg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import i1 from "../assets/i1.webp";
@@ -19,6 +18,8 @@ import UploadModal from "../components/modals/upload-modal";
 import ComingSoon from "../components/modals/coming-soon";
 import MoodModal from "../components/modals/mood-modal";
 import Genres from "./components/Genres";
+import SongsYouWillLove from "./SongsYouWillLove";
+import TrendingPlayList from "./TrendingPlayList";
 
 const Explore = () => {
   const [mobileSidebar, setMobileSidebar] = useState(true);
@@ -185,49 +186,10 @@ const Explore = () => {
                 </div> */}
 
                 {/* Trending Playlist */}
-                <h2 className="text-2xl mt-14">Trending Playlists</h2>
-                <Link
-                  to="/explore"
-                  className="text-sm text-white hover:underline"
-                >
-                  See all
-                </Link>
-                <div className="grid mt-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-3">
-                  {Array.from({ length: 6 }).map((_, index) => (
-                    // <Genre key={index} />
-                    <div className="item cursor-pointer hover:scale-105 transition-all duration-500 h-[165px] overflow-hidden relative rounded-[20px]">
-                      <img
-                        src={playlistImg}
-                        className="w-full h-[165px] object-cover"
-                        alt=""
-                      />
-                      <img
-                        src={genresImg}
-                        className="w-5 h-5 rounded-full object-cover pp-img"
-                        alt=""
-                      />
-                      <div className="blur-holder">
-                        <div className="blur playlist"></div>
-                        <div className="text-block playlist">
-                          gym playlist 69
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
 
+                <TrendingPlayList />
                 {/* Trending Playlist */}
-                <h2 className="text-2xl mt-14">Songs You'll LOVE</h2>
-                <Link
-                  to="/explore"
-                  className="text-sm text-white hover:underline"
-                >
-                  See all
-                </Link>
-
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <LikedSong key={index} />
-                ))}
+                <SongsYouWillLove />
               </div>
 
               <div className="right w-full xl:w-3/12">
