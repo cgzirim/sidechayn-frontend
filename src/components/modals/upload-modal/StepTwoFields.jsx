@@ -4,18 +4,14 @@ import { FileUploader } from "react-drag-drop-files";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import upload from "../../../assets/upload.svg";
+import Genre from "../../genre";
+import GenreInput from "./GenreInput";
+import { Controller, useFormContext } from "react-hook-form";
+
+export const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "WEBP", "SVG"];
 
 const StepTwoFields = ({ handleSubmit, setModalStep }) => {
-  const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "WEBP", "SVG"];
-
-  // audio file types wav, mp3
-  const audioTypes = ["MP3", "WAV"];
-
-  const [file, setFile] = useState(null);
   const [albumArt, setAlbumArt] = useState(null);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const [isLoadingAlbum, setIsLoadingAlbum] = useState(false);
   const [progressAlbum, setProgressAlbum] = useState(0);
@@ -23,6 +19,7 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
   const handleChange1 = (file) => {
     simulateLoading(setProgressAlbum, setIsLoadingAlbum, () => {
       setAlbumArt(file);
+      setValue("cover_image", file); // update form state
     });
   };
 
@@ -44,18 +41,92 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
     }, 50); // 50ms delay -> 5% every 50ms => ~1 second total
   };
 
+  const { control, setValue } = useFormContext();
+
   return (
     <div className="step-2">
-      <form
+      <div className="mt-5 grid lg:grid-cols-2 lg:grid-cols-2 grid-cols-1 gap-4">
+        {/* <form
         action=""
         className="mt-5 grid lg:grid-cols-2 lg:grid-cols-2 grid-cols-1 gap-4"
-      >
-        <Input label="Title" placeholder="Enter your track title" />
+      > */}
 
-        <Input label="Description" placeholder="Enter your track description" />
+        <Controller
+          //   defaultValue={defaultInputValue}
+          control={control}
+          //   rules={rules}
+          name="title"
+          render={({ fieldState, field }) => {
+            return (
+              <Input
+                {...field}
+                label="Title"
+                placeholder="Enter your track title"
+              />
+
+              // <Fragment>
+              //   <textarea
+
+              //     ref={ref as ForwardedRef<HTMLTextAreaElement>}
+              //     className={`${
+              //       fieldState?.invalid
+              //         ? "border-red-400 border-2"
+              //         : "border-[#c1c1c1]"
+              //     }
+              //     w-full resize-none text-gray-600 rounded-md px-4 py-2 h-20
+              //     outline-1 border blur-0  focus:outline-fyellow`}
+              //     {...(props as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+              //   ></textarea>
+              //   <p
+              //     className={`${
+              //       fieldState?.invalid ? "text-red-400" : "text-fgrey"
+              //     } text-sm`}
+              //   >
+              //     {fieldState?.invalid ? fieldState?.error?.message : hint}
+              //   </p>
+              // </Fragment>
+            );
+          }}
+        />
+
+        <Controller
+          //   defaultValue={defaultInputValue}
+          control={control}
+          //   rules={rules}
+          name="description"
+          render={({ fieldState, field }) => {
+            return (
+              <Input
+                {...field}
+                label="Description"
+                placeholder="Enter your track description"
+              />
+            );
+          }}
+        />
+
+        {/* <Input label="Key" optional placeholder="Enter your track key" />
+        <Input label="BPM" optional placeholder="Enter your track bpm" /> */}
 
         <div className="upload-input col-span-1">
-          <label htmlFor="" className="text-white text-[17px] block leading-2">
+          <Controller
+            //   defaultValue={defaultInputValue}
+            control={control}
+            //   rules={rules}
+            name="key"
+            render={({ fieldState, field }) => {
+              return (
+                <Input
+                  {...field}
+                  label="Key"
+                  optional
+                  placeholder="Enter your track key"
+                />
+              );
+            }}
+          />
+
+          {/* <label htmlFor="" className="text-white text-[17px] block leading-2">
             Key
           </label>
           <span className="text-gray-500 text-xs">(optional)</span>
@@ -63,10 +134,27 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
             type="text"
             className="input border border-dashed border-white input-bordered w-full bg-[#3d3d38] py-2 px-3 text-white rounded-md mt-2"
             placeholder="Enter your track key"
-          />
+          /> */}
         </div>
         <div className="upload-input col-span-1">
-          <label htmlFor="" className="text-white text-[17px] block leading-2">
+          <Controller
+            //   defaultValue={defaultInputValue}
+            control={control}
+            //   rules={rules}
+            name="bpm"
+            render={({ fieldState, field }) => {
+              return (
+                <Input
+                  {...field}
+                  label="BPM"
+                  optional
+                  placeholder="Enter your track bpm"
+                />
+              );
+            }}
+          />
+
+          {/* <label htmlFor="" className="text-white text-[17px] block leading-2">
             BPM
           </label>
           <span className="text-gray-500 text-xs">(optional)</span>
@@ -74,9 +162,20 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
             type="text"
             className="input border border-dashed border-white input-bordered w-full bg-[#3d3d38] py-2 px-3 text-white rounded-md mt-2"
             placeholder="Enter your track bpm"
-          />
+          /> */}
         </div>
-        <div className="upload-input lg:col-span-2 col-span-1">
+
+        <Controller
+          // defaultValue={defaultInputValue}
+          control={control}
+          // rules={rules}
+          name="genre"
+          render={({ fieldState, field }) => {
+            return <GenreInput {...field} />;
+          }}
+        />
+
+        {/* <div className="upload-input lg:col-span-2 col-span-1">
           <label htmlFor="" className="text-white text-[17px]">
             Genre
           </label>
@@ -85,7 +184,7 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
             className="input border border-dashed border-white input-bordered w-full bg-[#3d3d38] py-2 px-3 text-white rounded-md mt-2"
             placeholder="Enter your track genre"
           />
-        </div>
+        </div> */}
         <div className="lg:col-span-2 col-span-1">
           <label htmlFor="" className="text-white text-[17px]">
             Cover art
@@ -93,7 +192,6 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
           <FileUploader
             handleChange={handleChange1}
             classes="file_upload cover-art"
-            name="file_album_art"
             types={fileTypes}
             children={
               <div className="flex justify-center items-center flex-col pt-4">
@@ -181,7 +279,8 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
             </button>
           </div>
         </div>
-      </form>
+      </div>
+      {/* </form> */}
     </div>
   );
 };

@@ -1,24 +1,30 @@
-import React, { useState } from 'react'
-import { FaHeart } from 'react-icons/fa'
-import userAvatar from "../../assets/user-avatar.jpg"
-import UserCard from '../user-card'
+import React, { useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import userAvatar from "../../assets/user-avatar.jpg";
+import UserCard from "../user-card";
+import UploadsSection from "./UploadsSection";
+import SongShowcase from "./SongShowcase";
 
-const TABS = ['All', 'Playlists', 'Users', 'Uploads', 'Achievements']
-
-
+const TABS = ["All", "Playlists", "Users", "Uploads", "Achievements"];
 
 const PlaylistSection = () => (
   <div className="text-white mt-6 space-y-6">
     <div>
       <h2 className="text-xl font-semibold mb-2">Default Playlists</h2>
-      <p className="text-lg">• Chill Vibes<br />• Party Starter</p>
+      <p className="text-lg">
+        • Chill Vibes
+        <br />• Party Starter
+      </p>
     </div>
     <div>
       <h2 className="text-xl font-semibold mb-2">Custom Playlists</h2>
-      <p className="text-lg">• Daniel’s Dropz<br />• Night Drives</p>
+      <p className="text-lg">
+        • Daniel’s Dropz
+        <br />• Night Drives
+      </p>
     </div>
   </div>
-)
+);
 
 const UsersSection = () => (
   <div className="text-white space-y-10 mt-6">
@@ -33,30 +39,20 @@ const UsersSection = () => (
     <div>
       <h2 className="text-2xl font-bold mb-4">Likers Of DJ Daniel</h2>
       <div className="grid lg:grid-cols-2 gap-4">
-        <UserCard name="Timmy Trumpet" listeners="12M"  icon="📊" />
-        <UserCard name="Ariana Grande" listeners="12M"  icon="🔥" />
+        <UserCard name="Timmy Trumpet" listeners="12M" icon="📊" />
+        <UserCard name="Ariana Grande" listeners="12M" icon="🔥" />
         <UserCard name="HEAP" listeners="12M" icon="🧱" />
       </div>
     </div>
   </div>
-)
-
-
-const UploadsSection = () => (
-    <div className="text-white mt-6 space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-2">DJ Daniel's Liked Songs</h2>
-        <p className="text-lg">• Chill Vibes<br />• Party Starter</p>
-      </div>
-    </div>
-  )
+);
 
 const DJProfile = () => {
-  const [activeTab, setActiveTab] = useState('All')
+  const [activeTab, setActiveTab] = useState("All");
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'All':
+      case "All":
         return (
           <div className="mt-6 space-y-12">
             {/* Stats Section */}
@@ -67,7 +63,9 @@ const DJProfile = () => {
               </div>
               <div className="bg-[#161616] rounded-xl p-6 text-center">
                 <h3 className="text-2xl font-bold">#13</h3>
-                <p className="text-sm text-gray-400 mt-1">Ranked On Sidechayn</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Ranked On Sidechayn
+                </p>
               </div>
               <div className="bg-[#161616] rounded-xl p-6 text-center">
                 <h3 className="text-2xl font-bold">10 Feb 2025</h3>
@@ -79,41 +77,29 @@ const DJProfile = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="lg:col-span-2 bg-[#161616] rounded-xl p-6 space-y-4">
                 {[1, 2].map((item, i) => (
-                  <div key={i} className="flex hover:scale-101 cursor-pointer border-b-1 pb-4 transition-all duration-200 items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={userAvatar}
-                        alt="Song"
-                        className="w-12 h-12 rounded-md object-cover"
-                      />
-                      <p>Blah black</p>
-                    </div>
-                    <div className="text-sm text-gray-400 flex gap-4">
-                      <span>1,834,433</span>
-                      <span>4:22</span>
-                    </div>
-                  </div>
+                  <SongShowcase key={i} />
                 ))}
               </div>
               <div className="bg-[#161616] rounded-xl p-6 text-center">
                 <p className="text-gray-400 text-sm">Last Active</p>
               </div>
             </div>
-
           </div>
-        )
-      case 'Playlists':
-        return <PlaylistSection />
-      case 'Users':
-        return <UsersSection />
-      case 'Uploads':
-        return <UploadsSection />
-      case 'Achievements':
-        return <div className="mt-6 text-gray-400">🏆 Achievements unlocked!</div>
+        );
+      case "Playlists":
+        return <PlaylistSection />;
+      case "Users":
+        return <UsersSection />;
+      case "Uploads":
+        return <UploadsSection />;
+      case "Achievements":
+        return (
+          <div className="mt-6 text-gray-400">🏆 Achievements unlocked!</div>
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white px-4 py-10 font-sans">
@@ -137,7 +123,7 @@ const DJProfile = () => {
           <button
             key={tab}
             className={`text-sm pb-1 cursor-pointer hover:border-b-2 hover:border-violet-500 transition-all duration-200 ${
-              activeTab === tab ? 'text-white border-b-2 border-violet-500' : ''
+              activeTab === tab ? "text-white border-b-2 border-violet-500" : ""
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -149,7 +135,7 @@ const DJProfile = () => {
       {/* Tab Content */}
       {renderTabContent()}
     </div>
-  )
-}
+  );
+};
 
-export default DJProfile
+export default DJProfile;

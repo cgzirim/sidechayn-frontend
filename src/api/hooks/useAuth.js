@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
-import apiClient from "../api/apiClient.js";
+import apiClient from "../apiClient.js";
 import {
   getCookie,
   setCookie,
@@ -9,7 +9,7 @@ import {
   setTokens,
   getTokenExpirationTime,
   isRefreshTokenValid,
-} from "../api/tokenManagement.js";
+} from "../tokenManagement.js";
 
 /**
  * @typedef {Object} UserData

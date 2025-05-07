@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import RequestOTPModal from "../components/modals/requestOtpModal";
 import PasswordResetModal from "../components/modals/passwordResetModal";
+import { useAuth } from "../api/hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
