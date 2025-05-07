@@ -1,12 +1,13 @@
 import React from "react";
 import Input from "../../inputs/Input";
 import { FileUploader } from "react-drag-drop-files";
-import { FaTimes, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 import upload from "../../../assets/upload.svg";
-import Genre from "../../genre";
 import GenreInput from "./GenreInput";
 import { Controller, useFormContext } from "react-hook-form";
+import AlbumInput from "./AlbumInput";
+import TagsInput from "../../inputs/TagsInput";
 
 export const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "WEBP", "SVG"];
 
@@ -175,6 +176,16 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
           }}
         />
 
+        <Controller
+          // defaultValue={defaultInputValue}
+          control={control}
+          // rules={rules}
+          name="album"
+          render={({ fieldState, field }) => {
+            return <AlbumInput {...field} />;
+          }}
+        />
+
         {/* <div className="upload-input lg:col-span-2 col-span-1">
           <label htmlFor="" className="text-white text-[17px]">
             Genre
@@ -185,6 +196,14 @@ const StepTwoFields = ({ handleSubmit, setModalStep }) => {
             placeholder="Enter your track genre"
           />
         </div> */}
+
+        <TagsInput
+          name="tags"
+          control={control}
+          label="Tags"
+          placeholder="Type a tag and press Enter"
+        />
+
         <div className="lg:col-span-2 col-span-1">
           <label htmlFor="" className="text-white text-[17px]">
             Cover art

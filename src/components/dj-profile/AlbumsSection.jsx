@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import AlbumUploadModal from "./AlbumUpload";
+import useAlbums from "../../api/hooks/albums/useAlbums";
+import useAuthUser from "../../api/hooks/useAuthUser";
 
-const albums = [
-  {
-    title: "Midnight Grooves",
-    year: "2023",
-    cover:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-    songs: 8,
-  },
-  {
-    title: "Afro Heat",
-    year: "2022",
-    cover:
-      "http://localhost:3000/static/media/user-avatar.6829ea10ad5b387807d6.jpg",
-    songs: 10,
-  },
-];
+import EmptyState from "../EmptyState";
 
 const AlbumsSection = () => {
   const [showModal, setShowModal] = useState(false);
+  const { data: userInfo } = useAuthUser();
+
+  const { data: albums, isLoading } = useAlbums({ artist: userInfo?.username });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <p className="text-white">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       {showModal && (
@@ -37,14 +36,19 @@ const AlbumsSection = () => {
           <span className="text-sm">Add Album</span>
         </button>
       </div>
+
+      {(!albums || albums.results.length === 0) && (
+        <EmptyState>No albums added yet!</EmptyState>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
-        {albums.map((album, idx) => (
+        {albums.results.map((album, idx) => (
           <div
             key={idx}
             className="bg-[#1e1e1e] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow group"
           >
             <img
-              src={album.cover}
+              src={album.cover_image}
               alt={album.title}
               className="w-full h-48 object-cover"
             />
@@ -52,8 +56,10 @@ const AlbumsSection = () => {
               <h3 className="text-white font-semibold text-base truncate">
                 {album.title}
               </h3>
-              <p className="text-gray-400 text-sm">Released: {album.year}</p>
-              <p className="text-gray-400 text-sm">{album.songs} songs</p>
+              <p className="text-gray-400 text-sm">
+                Released: {album.release_date}
+              </p>
+              <p className="text-gray-400 text-sm">{album.total_songs} songs</p>
             </div>
           </div>
         ))}

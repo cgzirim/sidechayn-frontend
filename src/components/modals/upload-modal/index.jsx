@@ -12,6 +12,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import apiClient from "../../../api/apiClient";
 import { useNavigate } from "react-router-dom";
 import useBearer from "../../../api/hooks/useBearer";
+import { useQueryClient } from "@tanstack/react-query";
 
 // const handleSubmit = (e) => {
 //     e.preventDefault();
@@ -75,6 +76,8 @@ const UploadModal = ({
   //     });
   //   };
 
+  const queryClient = useQueryClient();
+
   const methods = useForm({
     defaultValues: {
       title: "",
@@ -84,6 +87,7 @@ const UploadModal = ({
       genre: "",
       coverArt: undefined,
       file: undefined,
+      tags: [],
     },
   });
 
@@ -104,6 +108,9 @@ const UploadModal = ({
     formData.append("cover_image", data.cover_image);
     formData.append("audio_file", data.audio_file);
 
+    formData.append("tags", data.tags);
+    formData.append("album", data.album);
+
     console.log("formData", Object.fromEntries(formData));
 
     try {
@@ -114,7 +121,7 @@ const UploadModal = ({
         },
       });
 
-      console.log("createdSong by backend", createdSong);
+      queryClient.invalidateQueries({ queryKey: ["songs"] });
 
       navigate("/explore");
     } catch (err) {
