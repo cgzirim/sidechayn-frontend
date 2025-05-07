@@ -111,8 +111,6 @@ const UploadModal = ({
     formData.append("tags", data.tags);
     formData.append("album", data.album);
 
-    console.log("formData", Object.fromEntries(formData));
-
     try {
       const createdSong = await apiClient.post(`songs/`, formData, {
         headers: {
