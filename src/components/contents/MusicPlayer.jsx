@@ -1,58 +1,52 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaPlay, FaPause } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useSongs from "../../api/hooks/songs/useSongs";
 import LoadingState from "../States/LoadingState";
-import useMusicStore from "../../stores/useMusicStore";
 
 import i1 from "../../assets/i1.webp";
 import i2 from "../../assets/i2.webp";
 import i3 from "../../assets/i3.webp";
 import i4 from "../../assets/i4.webp";
 import download from "../../assets/download.png";
+import apiClient from "../../api/apiClient";
 
 const MusicPlayer = ({ bar }) => {
   const { data: songs, isLoading, isError } = useSongs();
+
   const tracks = songs?.results || [];
-
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [shares, setShares] = useState(0);
+  const [likes, setLikes] = useState(0);
+  const [views, setViews] = useState(0);
+  const [saves, setSaves] = useState(0);
   const audioRef = useRef(null);
-
-  const {
-    currentIndex,
-    isPlaying,
-    progress,
-    shares,
-    likes,
-    views,
-    saves,
-    setProgress,
-    play,
-    pause,
-    togglePlay,
-    nextTrack,
-    prevTrack,
-    incrementLikes,
-    incrementShares,
-    incrementSaves,
-    incrementViews,
-    setCurrentPlayingSong,
-  } = useMusicStore();
 
   const currentTrack = tracks[currentIndex];
 
   const playAudio = () => {
-    audioRef.current
-      ?.play()
-      .then(play)
-      .catch((e) => {
-        console.error("Playback error:", e);
-        pause();
-      });
+    if (audioRef.current) {
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((error) => {
+          console.error("Playback error:", error);
+          setIsPlaying(false);
+        });
+    }
   };
 
   const pauseAudio = () => {
-    audioRef.current?.pause();
-    pause();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const togglePlay = () => {
+    isPlaying ? pauseAudio() : playAudio();
   };
 
   const handleTimeUpdate = () => {
@@ -70,14 +64,26 @@ const MusicPlayer = ({ bar }) => {
     }
   };
 
+  const nextTrack = () => {
+    if (tracks.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % tracks.length);
+    setProgress(0);
+  };
+
+  const prevTrack = () => {
+    if (tracks.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
+    setProgress(0);
+  };
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleEnded = () => nextTrack(tracks.length);
+    const handleEnded = () => nextTrack();
     const handleError = () => {
       console.error("Audio failed to load");
-      nextTrack(tracks.length);
+      nextTrack();
     };
 
     audio.addEventListener("ended", handleEnded);
@@ -87,24 +93,68 @@ const MusicPlayer = ({ bar }) => {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
     };
-  }, [tracks.length, nextTrack]);
+  }, [tracks]);
 
   useEffect(() => {
-    setCurrentPlayingSong(currentTrack);
+    if (audioRef.current) {
+      audioRef.current.load();
+      if (isPlaying) {
+        playAudio();
+      }
+    }
+  }, [currentIndex, tracks]);
+
+  useEffect(() => {
+    if (currentTrack) {
+      setLikes(currentTrack.total_likes);
+      setShares(currentTrack.total_shares);
+      setViews(currentTrack.total_streams);
+      setSaves(currentTrack.total_saves);
+    }
   }, [currentTrack]);
-  // useEffect(() => {
-  //   if (audioRef.current) {
-  //     audioRef.current.load();
-  //     if (isPlaying) {
-  //       playAudio();
-  //     }
-  //   }
-  // }, [currentIndex, tracks, isPlaying]);
+
+  const toggleSave = async () => {
+    setSaves(saves + 1);
+
+    try {
+      const savedLike = await apiClient.patch(
+        `songs/${currentTrack.id}/save/`,
+        {
+          save_song: true,
+        }
+      );
+
+      console.log("savedLike => ", savedLike);
+    } catch (error) {
+      console.log("Error savig music", error);
+      setSaves(saves - 1);
+    }
+  };
+
+  const toggleLike = async () => {
+    setLikes(saves + 1);
+
+    try {
+      const savedLikes = await apiClient.patch(
+        `songs/${currentTrack.id}/like/`,
+        {
+          likes_song: true,
+        }
+      );
+
+      console.log("savedLikes => ", savedLikes);
+    } catch (error) {
+      console.log("Error like music", error);
+      setLikes(saves - 1);
+    }
+  };
 
   if (isLoading) return <LoadingState />;
   if (isError || tracks.length === 0)
     return (
-      <div className="text-white text-center p-10">Failed to load songs.</div>
+      <div className="text-white text-center p-10">
+        Failed to load songs. Please try again later.
+      </div>
     );
 
   return (
@@ -115,10 +165,9 @@ const MusicPlayer = ({ bar }) => {
         onTimeUpdate={handleTimeUpdate}
         preload="metadata"
       />
-
       <div className="flex justify-center items-center gap-5">
         <FaChevronLeft
-          onClick={() => prevTrack(tracks.length)}
+          onClick={prevTrack}
           className="text-[#ffffff9c] hover:text-white text-2xl cursor-pointer"
         />
         <div className={`music-player-item ${!bar && "z-[-1]"}`}>
@@ -129,11 +178,11 @@ const MusicPlayer = ({ bar }) => {
             <div
               className="music-player-timeline is-playing bg-white h-2 rounded"
               style={{ width: `${progress}%` }}
-            />
+            ></div>
           </div>
         </div>
         <FaChevronRight
-          onClick={() => nextTrack(tracks.length)}
+          onClick={nextTrack}
           className="text-[#ffffff9c] hover:text-white text-2xl cursor-pointer"
         />
       </div>
@@ -158,13 +207,13 @@ const MusicPlayer = ({ bar }) => {
               </button>
               <div className="absolute mt-2 w-32 rounded-md shadow-lg bg-[#1e1e1e] ring-1 ring-black ring-opacity-5 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="py-1 flex flex-col">
-                  <Link
-                    to={currentTrack?.audio_file}
+                  <a
+                    href={currentTrack?.audio_file}
                     className="block px-4 py-2 text-sm text-white hover:bg-[#2c2c2c]"
                     download={currentTrack?.title}
                   >
                     Download
-                  </Link>
+                  </a>
                   <Link
                     to="/share"
                     className="block px-4 py-2 text-sm text-white hover:bg-[#2c2c2c]"
@@ -175,7 +224,7 @@ const MusicPlayer = ({ bar }) => {
               </div>
             </div>
             <button
-              onClick={() => (isPlaying ? pauseAudio() : playAudio())}
+              onClick={togglePlay}
               className="ml-5 bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
             >
               {isPlaying ? <FaPause /> : <FaPlay />}
@@ -184,13 +233,13 @@ const MusicPlayer = ({ bar }) => {
 
           <div className="flex my-8 justify-start items-center gap-3">
             <img
-              src={currentTrack.artist.picture}
+              src={currentTrack.artist?.picture}
               alt="artist"
               className="w-[48px] h-[48px] rounded-full"
             />
-            <div className="right">
+            <div>
               <h3 className="text-white raleway text-[15px]">
-                {currentTrack.artist.name}
+                {currentTrack.artist?.name}
               </h3>
               <p className="text-[13px] text-[#969597]">
                 Uploaded {currentTrack.release_date}
@@ -203,31 +252,35 @@ const MusicPlayer = ({ bar }) => {
               <span className="text-white text-sm">5.5K</span>
             </div>
             <button
-              onClick={incrementShares}
+              onClick={() => setShares(shares + 1)}
+              title="Shares"
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
-              <img src={i1} alt="" className="w-[19px] h-[19px]" />
+              <img src={i1} alt="share" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{shares}</span>
             </button>
             <button
-              onClick={incrementLikes}
+              onClick={toggleLike}
+              title="Likes"
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
-              <img src={i2} alt="" className="w-[19px] h-[19px]" />
+              <img src={i2} alt="like" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{likes}</span>
             </button>
             <button
-              onClick={incrementViews}
+              onClick={() => setViews(views + 1)}
+              title="Views"
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
-              <img src={i3} alt="" className="w-[19px] h-[19px]" />
+              <img src={i3} alt="views" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{views}</span>
             </button>
             <button
-              onClick={incrementSaves}
+              onClick={toggleSave}
+              title="Saves"
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
-              <img src={i4} alt="" className="w-[19px] h-[19px]" />
+              <img src={i4} alt="save" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{saves}</span>
             </button>
           </div>

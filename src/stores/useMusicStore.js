@@ -21,7 +21,14 @@ const useMusicStore = create((set, get) => ({
   incrementShares: () => set((state) => ({ shares: state.shares + 1 })),
   incrementLikes: () => set((state) => ({ likes: state.likes + 1 })),
   incrementViews: () => set((state) => ({ views: state.views + 1 })),
-  incrementSaves: () => set((state) => ({ saves: state.saves + 1 })),
+  toggleSaves: () => {
+    const currentSaves = get().saves;
+    if (currentSaves > 0) {
+      set({ saves: currentSaves - 1 });
+    } else {
+      set({ saves: currentSaves + 1 });
+    }
+  },
 
   nextTrack: (length) => {
     const current = get().currentIndex;

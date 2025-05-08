@@ -115,7 +115,7 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
                     />
                     <div className="text">
                       <h2 className="text-[#a8a8a8] text-sm text-[15px]">
-                        {"song.user"}
+                        {song.artist.username}
                       </h2>
                     </div>
                   </div>
