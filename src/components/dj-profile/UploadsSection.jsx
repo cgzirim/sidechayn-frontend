@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import { BiPlus } from "react-icons/bi";
-import SongShowcase from "./SongsSection";
-import UploadModal from "../modals/upload-modal";
-import SongUpload from "./SongUpload";
+import React from "react";
 import AlbumsSection from "./AlbumsSection";
 import SongsSection from "./SongsSection";
 

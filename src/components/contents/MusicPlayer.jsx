@@ -1,112 +1,124 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaPlay, FaPause } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useSongs from "../../api/hooks/songs/useSongs";
+import LoadingState from "../States/LoadingState";
+import useMusicStore from "../../stores/useMusicStore";
 
-import artist from "../../assets/artist.jpg";
 import i1 from "../../assets/i1.webp";
 import i2 from "../../assets/i2.webp";
 import i3 from "../../assets/i3.webp";
 import i4 from "../../assets/i4.webp";
 import download from "../../assets/download.png";
-import cover from "../../assets/cover.jpg";
-
-import kai from "../../assets/tracks/kai.mp3";
-import laho from "../../assets/tracks/laho.mp3";
-
-// Sample tracks (Replace with real URLs or imported files)
-const tracks = [
-  {
-    title: "Kai",
-    artist: "Olamide ft Wizkid",
-    url: kai, // Replace this
-    uploadedAgo: "5 days ago",
-  },
-  {
-    title: "Laho",
-    artist: "Shalipopi",
-    url: laho, // Replace this
-    uploadedAgo: "2 weeks ago",
-  },
-];
 
 const MusicPlayer = ({ bar }) => {
-  const [shares, setShares] = useState(0);
-  const [likes, setLikes] = useState(0);
-  const [views, setViews] = useState(0);
-  const [saves, setSaves] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const { data: songs, isLoading, isError } = useSongs();
+  const tracks = songs?.results || [];
 
   const audioRef = useRef(null);
+
+  const {
+    currentIndex,
+    isPlaying,
+    progress,
+    shares,
+    likes,
+    views,
+    saves,
+    setProgress,
+    play,
+    pause,
+    togglePlay,
+    nextTrack,
+    prevTrack,
+    incrementLikes,
+    incrementShares,
+    incrementSaves,
+    incrementViews,
+    setCurrentPlayingSong,
+  } = useMusicStore();
 
   const currentTrack = tracks[currentIndex];
 
   const playAudio = () => {
-    audioRef.current.play();
-    setIsPlaying(true);
+    audioRef.current
+      ?.play()
+      .then(play)
+      .catch((e) => {
+        console.error("Playback error:", e);
+        pause();
+      });
   };
 
   const pauseAudio = () => {
-    audioRef.current.pause();
-    setIsPlaying(false);
-  };
-
-  const togglePlay = () => {
-    isPlaying ? pauseAudio() : playAudio();
+    audioRef.current?.pause();
+    pause();
   };
 
   const handleTimeUpdate = () => {
-    const current = audioRef.current.currentTime;
-    const duration = audioRef.current.duration;
-    setProgress((current / duration) * 100);
+    const audio = audioRef.current;
+    if (audio?.duration) {
+      setProgress((audio.currentTime / audio.duration) * 100);
+    }
   };
 
   const handleProgressClick = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const width = rect.width;
-    const percent = offsetX / width;
-    audioRef.current.currentTime = percent * audioRef.current.duration;
-  };
-
-  const nextTrack = () => {
-    setCurrentIndex((prev) => (prev + 1) % tracks.length);
-    setProgress(0);
-    setIsPlaying(false);
-  };
-
-  const prevTrack = () => {
-    setCurrentIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
-    setProgress(0);
-    setIsPlaying(false);
+    const percent = (e.clientX - rect.left) / rect.width;
+    if (audioRef.current?.duration) {
+      audioRef.current.currentTime = percent * audioRef.current.duration;
+    }
   };
 
   useEffect(() => {
     const audio = audioRef.current;
-    audio.addEventListener("ended", nextTrack);
-    return () => {
-      audio.removeEventListener("ended", nextTrack);
+    if (!audio) return;
+
+    const handleEnded = () => nextTrack(tracks.length);
+    const handleError = () => {
+      console.error("Audio failed to load");
+      nextTrack(tracks.length);
     };
-  }, []);
+
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("error", handleError);
+
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("error", handleError);
+    };
+  }, [tracks.length, nextTrack]);
 
   useEffect(() => {
-    if (isPlaying) {
-      playAudio();
-    }
-  }, [currentIndex]);
+    setCurrentPlayingSong(currentTrack);
+  }, [currentTrack]);
+  // useEffect(() => {
+  //   if (audioRef.current) {
+  //     audioRef.current.load();
+  //     if (isPlaying) {
+  //       playAudio();
+  //     }
+  //   }
+  // }, [currentIndex, tracks, isPlaying]);
+
+  if (isLoading) return <LoadingState />;
+  if (isError || tracks.length === 0)
+    return (
+      <div className="text-white text-center p-10">Failed to load songs.</div>
+    );
 
   return (
     <div className="music-player xl:p-10 p-5 rounded-[30px] bg-[#0c0c0c] mt-5">
       <audio
         ref={audioRef}
-        src={currentTrack.url}
+        src={currentTrack?.audio_file}
         onTimeUpdate={handleTimeUpdate}
+        preload="metadata"
       />
 
       <div className="flex justify-center items-center gap-5">
         <FaChevronLeft
-          onClick={prevTrack}
+          onClick={() => prevTrack(tracks.length)}
           className="text-[#ffffff9c] hover:text-white text-2xl cursor-pointer"
         />
         <div className={`music-player-item ${!bar && "z-[-1]"}`}>
@@ -117,11 +129,11 @@ const MusicPlayer = ({ bar }) => {
             <div
               className="music-player-timeline is-playing bg-white h-2 rounded"
               style={{ width: `${progress}%` }}
-            ></div>
+            />
           </div>
         </div>
         <FaChevronRight
-          onClick={nextTrack}
+          onClick={() => nextTrack(tracks.length)}
           className="text-[#ffffff9c] hover:text-white text-2xl cursor-pointer"
         />
       </div>
@@ -136,17 +148,20 @@ const MusicPlayer = ({ bar }) => {
             <h2 className="text-[#e4e2e7] font-normal text-[25px]">
               {currentTrack.title}
             </h2>
-
             <div className="relative inline-block text-left group">
               <button className="text-[#ffffff9c] pt-3 text-xl lg:mr-12 hover:text-white">
-                <img src={download} alt="" className="w-[25px] h-[25px]" />
+                <img
+                  src={download}
+                  alt="download"
+                  className="w-[25px] h-[25px]"
+                />
               </button>
-
               <div className="absolute mt-2 w-32 rounded-md shadow-lg bg-[#1e1e1e] ring-1 ring-black ring-opacity-5 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="py-1 flex flex-col">
                   <Link
-                    to="/download"
+                    to={currentTrack?.audio_file}
                     className="block px-4 py-2 text-sm text-white hover:bg-[#2c2c2c]"
+                    download={currentTrack?.title}
                   >
                     Download
                   </Link>
@@ -159,9 +174,8 @@ const MusicPlayer = ({ bar }) => {
                 </div>
               </div>
             </div>
-
             <button
-              onClick={togglePlay}
+              onClick={() => (isPlaying ? pauseAudio() : playAudio())}
               className="ml-5 bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
             >
               {isPlaying ? <FaPause /> : <FaPlay />}
@@ -170,16 +184,16 @@ const MusicPlayer = ({ bar }) => {
 
           <div className="flex my-8 justify-start items-center gap-3">
             <img
-              src={artist}
-              alt=""
+              src={currentTrack.artist.picture}
+              alt="artist"
               className="w-[48px] h-[48px] rounded-full"
             />
             <div className="right">
               <h3 className="text-white raleway text-[15px]">
-                {currentTrack.artist}
+                {currentTrack.artist.name}
               </h3>
               <p className="text-[13px] text-[#969597]">
-                Uploaded {currentTrack.uploadedAgo}
+                Uploaded {currentTrack.release_date}
               </p>
             </div>
           </div>
@@ -189,32 +203,28 @@ const MusicPlayer = ({ bar }) => {
               <span className="text-white text-sm">5.5K</span>
             </div>
             <button
-              onClick={() => setShares(shares + 1)}
-              title="Shares"
+              onClick={incrementShares}
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
               <img src={i1} alt="" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{shares}</span>
             </button>
             <button
-              onClick={() => setLikes(likes + 1)}
-              title="Likes"
+              onClick={incrementLikes}
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
               <img src={i2} alt="" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{likes}</span>
             </button>
             <button
-              onClick={() => setViews(views + 1)}
-              title="Views"
+              onClick={incrementViews}
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
               <img src={i3} alt="" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{views}</span>
             </button>
             <button
-              onClick={() => setSaves(saves + 1)}
-              title="Saves"
+              onClick={incrementSaves}
               className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
             >
               <img src={i4} alt="" className="w-[19px] h-[19px]" />
@@ -224,7 +234,11 @@ const MusicPlayer = ({ bar }) => {
         </div>
 
         <div className="w-full xl:w-1/3">
-          <img src={cover} className="xl:w-full w-2/3 mx-auto" alt="" />
+          <img
+            src={currentTrack.cover_image}
+            className="xl:w-full xl:h-full w-2/3 mx-auto"
+            alt="cover"
+          />
         </div>
       </div>
     </div>
