@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import OTPModal from "../components/modals/otpModal";
-import RequestOTPModal from "../components/modals/requestOtpModal";
+import VerifyEmailNoticeModal from "../components/modals/verifyEmailNoticeModal";
 import { useAuth } from "../api/hooks/useAuth";
 
 const Register = () => {
@@ -13,11 +12,13 @@ const Register = () => {
     username: "",
     password: "",
   });
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [emailFromResend, setEmailFromResend] = useState("");
-  const [showRequestOTPModal, setShowRequestOTPModal] = useState(false);
-  const { register, isRegistrationReqSent, isLoginSuccessful } = useAuth();
-  const { resendOTP, hasSentOTP, verifyEmail, authErrorMessages } = useAuth();
+  const {
+    register,
+    isRegistrationReqSent,
+    isLoginSuccessful,
+    authErrorMessages,
+  } = useAuth();
+  const [showVerifyNoticeModal, setShowVerifyNoticeModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,25 +31,17 @@ const Register = () => {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     await register(formData);
-    if (isRegistrationReqSent && !authErrorMessages) {
-      setShowOtpModal(true);
-    }
   };
 
   useEffect(() => {
     if (isRegistrationReqSent) {
-      setShowOtpModal(true);
+      setShowVerifyNoticeModal(true);
     }
   }, [isRegistrationReqSent]);
 
   useEffect(() => {
-    if (hasSentOTP) {
-      setShowOtpModal(true);
-    }
-  }, [hasSentOTP]);
-
-  useEffect(() => {
     if (isLoginSuccessful) {
+      setShowVerifyNoticeModal(true);
       navigate("/", { replace: true });
     }
   }, [isLoginSuccessful]);
@@ -57,22 +50,12 @@ const Register = () => {
     <div className="register py-10 flex justify-center items-center h-screen">
       <div className="container">
         <div className="card w-5xl max-w-full mx-auto rounded-[20px] bg-[#232323] p-10">
-          <div className="w-full px-6 py-2 text-center bg-[#5634FE] text-white w-full px-6 py-2 rounded-md">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-semibold hover:opacity-90 cursor-pointer"
-            >
-              Login
-            </Link>{" "}
-            /{" "}
-            <button
-              onClick={() => setShowRequestOTPModal(true)}
-              className="font-semibold hover:opacity-90 cursor-pointer bg-transparent border-none text-white p-0"
-            >
-              Verify Email
-            </button>
-          </div>
+          <button
+            onClick={() => navigate("/login")}
+            className="w-full px-6 py-2 text-center bg-[#5634FE] text-white rounded-md font-semibold hover:opacity-90, cursor-pointer"
+          >
+            Already have an account? Login
+          </button>
 
           <div className="mt-6">
             <p className="text-gray-400">Register with:</p>
@@ -180,19 +163,11 @@ const Register = () => {
           </div>
         </div>
       </div>
-      <OTPModal
-        isVisible={showOtpModal}
-        handleClose={() => setShowOtpModal(false)}
-        onVerifyOTP={verifyEmail}
-        onResendOTP={() =>
-          resendOTP(formData.email || emailFromResend, "EmailVerification")
-        }
-      />
-      <RequestOTPModal
-        isVisible={showRequestOTPModal}
-        handleClose={() => setShowRequestOTPModal(false)}
-        onRequestOTP={resendOTP}
-        onEmailProvided={setEmailFromResend}
+      <VerifyEmailNoticeModal
+        isVisible={showVerifyNoticeModal}
+        onClose={() => {
+          setShowVerifyNoticeModal(false);
+        }}
       />
     </div>
   );
