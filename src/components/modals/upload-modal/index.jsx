@@ -13,6 +13,8 @@ import apiClient from "../../../api/apiClient";
 import { useNavigate } from "react-router-dom";
 import useBearer from "../../../api/hooks/useBearer";
 import { useQueryClient } from "@tanstack/react-query";
+import useLoadingStore from "../../../stores/useLoadingStore";
+import UploadLoadingModal from "../UploadLoadingModal";
 
 // const handleSubmit = (e) => {
 //     e.preventDefault();
@@ -31,6 +33,7 @@ const UploadModal = ({
   setModalStep,
 }) => {
   const navigate = useNavigate();
+  const { showLoading, hideLoading, isVisible, message } = useLoadingStore();
 
   //   const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "WEBP", "SVG"];
 
@@ -99,6 +102,7 @@ const UploadModal = ({
 
   const onSubmit = async (data) => {
     setIsCreatingSong(true);
+    showLoading();
 
     formData.append("title", data.title);
     formData.append("description", data.description);
@@ -118,13 +122,14 @@ const UploadModal = ({
           ...bearer,
         },
       });
-
+      console.log("createdSong => ", createdSong);
       queryClient.invalidateQueries({ queryKey: ["songs"] });
-
+      hideLoading();
       navigate("/explore");
     } catch (err) {
       setIsCreatingSong(false);
       console.log("Something went wrong", err);
+      hideLoading();
     }
 
     setIsCreatingSong(false);
@@ -133,7 +138,7 @@ const UploadModal = ({
   return (
     <div>
       <div
-        className="modal-bg bg-black opacity-75 fixed top-0 left-0 h-screen w-screen z-[20000]"
+        className="modal-bg bg-black opacity-75 fixed top-0 left-0 h-screen w-screen z-[200]"
         onClick={handleClose}
       ></div>
       <div
@@ -141,6 +146,7 @@ const UploadModal = ({
           modalStep === 1 ? "w-[450px]" : "w-[750px]"
         } max-w-[90%] bg-[#151515] py-6 px-5 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[999999999999999999] rounded-xl`}
       >
+        <UploadLoadingModal visible={isVisible} message={message} />
         <div className="text-right w-full">
           <button
             onClick={handleClose}

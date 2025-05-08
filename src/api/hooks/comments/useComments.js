@@ -2,17 +2,17 @@
 import apiClient from "../../apiClient";
 import { useQuery } from "@tanstack/react-query";
 
-const useSongs = (config) => {
-  const { searchTerm, limit, genre } = config || {};
+const useComments = (config) => {
+  const { searchTerm, limit, song } = config || {};
   return useQuery({
-    queryKey: ["songs", config],
+    queryKey: ["comments", searchTerm],
     queryFn: () =>
       apiClient
-        .get("songs/", {
+        .get("comments/", {
           params: {
             search: searchTerm,
             limit: limit,
-            genre: genre,
+            song: song,
           },
         })
         .then((res) => res.data),
@@ -20,4 +20,4 @@ const useSongs = (config) => {
   });
 };
 
-export default useSongs;
+export default useComments;

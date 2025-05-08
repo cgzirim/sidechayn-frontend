@@ -9,13 +9,13 @@ import UploadModal from "../components/modals/upload-modal";
 import UpNext from "../components/up-next";
 import useBearer from "../api/hooks/useBearer";
 import { useAuth } from "../api/hooks/useAuth";
+import useLoadingStore from "../stores/useLoadingStore";
+import UploadLoadingModal from "../components/modals/UploadLoadingModal";
 
 const Homepage = () => {
   const { isAuthenticated } = useAuth();
 
   const isAuth = isAuthenticated();
-
-  const b = useBearer();
 
   const [bar, setBar] = React.useState(true);
   const handleBar = () => {
@@ -75,6 +75,7 @@ const Homepage = () => {
   const handleComingSoonClick = () => {
     setComingSoonModalVisible(true);
   };
+
   return (
     <div>
       <Header handleMobileSidebar={handleMobileSidebar} />

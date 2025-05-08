@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes, FaTrash } from "react-icons/fa";
 
 import "../../components/modals/upload-modal/upload-modal.css";
@@ -14,6 +14,8 @@ import { FileUploader } from "react-drag-drop-files";
 import { fileTypes } from "../modals/upload-modal/StepTwoFields";
 import DateInput from "../inputs/DateInput";
 import { useQueryClient } from "@tanstack/react-query";
+import useLoadingStore from "../../stores/useLoadingStore";
+import UploadLoadingModal from "../modals/UploadLoadingModal";
 
 const AlbumUploadModal = ({
   modalStep,
@@ -23,6 +25,7 @@ const AlbumUploadModal = ({
   setModalStep,
 }) => {
   const queryClient = useQueryClient();
+  const { showLoading, hideLoading, message, isVisible } = useLoadingStore();
 
   const navigate = useNavigate();
   const methods = useForm({
@@ -45,6 +48,8 @@ const AlbumUploadModal = ({
 
   const onSubmit = async (data) => {
     setIsCreatingSong(true);
+    showLoading();
+
     const d = new Date(data.release_date);
     formData.append("title", data.title);
     formData.append("description", data.description);
@@ -64,10 +69,12 @@ const AlbumUploadModal = ({
 
       handleClose();
       queryClient.invalidateQueries({ queryKey: ["tags"] });
+      hideLoading();
       return navigate("/profile");
     } catch (err) {
       setIsCreatingSong(false);
       console.log("Something went wrong", err);
+      hideLoading();
     }
 
     setIsCreatingSong(false);
@@ -109,6 +116,8 @@ const AlbumUploadModal = ({
       caption="Share your music album with the whole world!"
       handleClose={handleClose}
     >
+      <UploadLoadingModal visible={isVisible} message={message} />
+
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="my-4">
           <Controller
