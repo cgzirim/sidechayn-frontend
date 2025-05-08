@@ -84,15 +84,13 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
                 <td className="text-center pr-4 py-4">
                   <span>💎</span> <br />
                   <span className="text-[#ffffff] text-sm">
-                    {"song.points"}
+                    {song.total_upvotes}
                   </span>
                 </td>
                 <td className="text-left py-4">
                   <div className="flex justify-start items-center gap-3">
                     <img
-                      src={
-                        song.album ? song.album.cover_image : song.cover_image
-                      }
+                      src={song.cover_image}
                       className="w-[65px] h-[65px] rounded-[20px]"
                       alt=""
                     />
