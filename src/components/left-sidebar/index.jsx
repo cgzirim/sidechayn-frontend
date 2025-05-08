@@ -12,8 +12,9 @@ import { FaChevronLeft } from "react-icons/fa";
 import LoginRegButton from "../buttons/LoginRegButton";
 import UserProfileCard from "../cards/UserProfileCard";
 
+import { useAuth } from "../../api/hooks/useAuth";
+
 const LeftSidebar = ({
-  loggedIn,
   bar,
   handleBar,
   setBar,
@@ -24,6 +25,13 @@ const LeftSidebar = ({
   handleComingSoonClose,
 }) => {
   const navigate = useNavigate();
+
+  const { isAuthenticated } = useAuth();
+
+  const isAuth = isAuthenticated();
+
+  console.log("isAuth =>", isAuth);
+
   const menuItems = [
     {
       name: "Home",
@@ -56,7 +64,7 @@ const LeftSidebar = ({
   ];
   return (
     <div className="px-4 py-5">
-      {loggedIn ? (
+      {isAuth ? (
         <UserProfileCard handleMobileSidebar={handleMobileSidebar} />
       ) : (
         <LoginRegButton handleMobileSidebar={handleMobileSidebar} />
@@ -111,7 +119,8 @@ const LeftSidebar = ({
 
         <p className="text-xs">
           Sidechayn is in beta development and will not be released to the
-          public until May 2025. ‍<br />
+          public until May 2025.
+          <br />
           <br />
           <Link to="/privacy-policy" className="text-[#fff] hover:underline">
             <b>Click here</b> to see upcoming features & report bugs / issues.
@@ -119,7 +128,7 @@ const LeftSidebar = ({
         </p>
       </div>
 
-      {loggedIn && (
+      {isAuth && (
         <AnimatedButton
           bar={bar}
           handleBar={handleBar}

@@ -1,22 +1,21 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Search from "../components/contents/search";
 import Header from "../components/header";
 import LeftSidebar from "../components/left-sidebar";
-import Search from "../components/contents/search";
-import { Link } from "react-router-dom";
 
-import genresImg from "../assets/genres.jpg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import genresImg from "../assets/genres.jpg";
 
 import i1 from "../assets/i1.webp";
 import i2 from "../assets/i2.webp";
 import i3 from "../assets/i3.webp";
 import i4 from "../assets/i4.webp";
-import UpcomingArtist from "../components/upcoming-artist";
-import LikedSong from "../components/liked-song";
-import LoginModal from "../components/modals/login-modal";
-import UploadModal from "../components/modals/upload-modal";
 import ComingSoon from "../components/modals/coming-soon";
+import LoginModal from "../components/modals/login-modal";
 import MoodModal from "../components/modals/mood-modal";
+import UploadModal from "../components/modals/upload-modal";
+import UpcomingArtist from "../components/upcoming-artist";
 import Genres from "./components/Genres";
 import SongsYouWillLove from "./SongsYouWillLove";
 import TrendingPlayList from "./TrendingPlayList";

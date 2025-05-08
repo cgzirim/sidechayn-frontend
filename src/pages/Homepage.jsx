@@ -13,10 +13,6 @@ import useLoadingStore from "../stores/useLoadingStore";
 import UploadLoadingModal from "../components/modals/UploadLoadingModal";
 
 const Homepage = () => {
-  const { isAuthenticated } = useAuth();
-
-  const isAuth = isAuthenticated();
-
   const [bar, setBar] = React.useState(true);
   const handleBar = () => {
     setBar(!bar);
@@ -87,7 +83,6 @@ const Homepage = () => {
             }`}
           >
             <LeftSidebar
-              loggedIn={isAuth}
               bar={bar}
               handleBar={handleBar}
               setBar={setBar}
