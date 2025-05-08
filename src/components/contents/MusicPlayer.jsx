@@ -5,11 +5,11 @@ import useSongs from "../../api/hooks/songs/useSongs";
 import LoadingState from "../States/LoadingState";
 
 import i1 from "../../assets/i1.webp";
-import i2 from "../../assets/i2.webp";
-import i3 from "../../assets/i3.webp";
-import i4 from "../../assets/i4.webp";
 import download from "../../assets/download.png";
-import apiClient from "../../api/apiClient";
+
+import SaveButton from "./SaveButton";
+import ViewsButton from "./ViewsButton";
+import LikesButton from "./LikesButton";
 
 const MusicPlayer = ({ bar }) => {
   const { data: songs, isLoading, isError } = useSongs();
@@ -23,6 +23,9 @@ const MusicPlayer = ({ bar }) => {
   const [views, setViews] = useState(0);
   const [saves, setSaves] = useState(0);
   const audioRef = useRef(null);
+
+  const [isSaved, setIsSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   const currentTrack = tracks[currentIndex];
 
@@ -110,44 +113,11 @@ const MusicPlayer = ({ bar }) => {
       setShares(currentTrack.total_shares);
       setViews(currentTrack.total_streams);
       setSaves(currentTrack.total_saves);
+
+      setIsSaved(currentTrack.i_saved || false);
+      setIsLiked(currentTrack.i_liked || false);
     }
   }, [currentTrack]);
-
-  const toggleSave = async () => {
-    setSaves(saves + 1);
-
-    try {
-      const savedLike = await apiClient.patch(
-        `songs/${currentTrack.id}/save/`,
-        {
-          save_song: true,
-        }
-      );
-
-      console.log("savedLike => ", savedLike);
-    } catch (error) {
-      console.log("Error savig music", error);
-      setSaves(saves - 1);
-    }
-  };
-
-  const toggleLike = async () => {
-    setLikes(saves + 1);
-
-    try {
-      const savedLikes = await apiClient.patch(
-        `songs/${currentTrack.id}/like/`,
-        {
-          likes_song: true,
-        }
-      );
-
-      console.log("savedLikes => ", savedLikes);
-    } catch (error) {
-      console.log("Error like music", error);
-      setLikes(saves - 1);
-    }
-  };
 
   if (isLoading) return <LoadingState />;
   if (isError || tracks.length === 0)
@@ -259,30 +229,24 @@ const MusicPlayer = ({ bar }) => {
               <img src={i1} alt="share" className="w-[19px] h-[19px]" />
               <span className="text-[#ffffff9c] text-sm">{shares}</span>
             </button>
-            <button
-              onClick={toggleLike}
-              title="Likes"
-              className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
-            >
-              <img src={i2} alt="like" className="w-[19px] h-[19px]" />
-              <span className="text-[#ffffff9c] text-sm">{likes}</span>
-            </button>
-            <button
-              onClick={() => setViews(views + 1)}
-              title="Views"
-              className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
-            >
-              <img src={i3} alt="views" className="w-[19px] h-[19px]" />
-              <span className="text-[#ffffff9c] text-sm">{views}</span>
-            </button>
-            <button
-              onClick={toggleSave}
-              title="Saves"
-              className="cursor-pointer bg-[#0e0e0e] hover:bg-[#353535] px-3 py-1 rounded-[40px] flex items-center gap-2 border border-[#353535]"
-            >
-              <img src={i4} alt="save" className="w-[19px] h-[19px]" />
-              <span className="text-[#ffffff9c] text-sm">{saves}</span>
-            </button>
+
+            <LikesButton
+              likes={likes}
+              setIsLiked={setIsLiked}
+              setLikes={setLikes}
+              isLiked={isLiked}
+              songId={currentTrack.id}
+            />
+
+            <ViewsButton views={views} />
+
+            <SaveButton
+              saves={saves}
+              setSaves={setSaves}
+              setIsSaved={setIsSaved}
+              isSaved={isSaved}
+              songId={currentTrack.id}
+            />
           </div>
         </div>
 
