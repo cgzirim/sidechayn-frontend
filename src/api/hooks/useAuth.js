@@ -36,7 +36,6 @@ export const useAuth = () => {
   const [isLoadingUserInfo, setisLoadingUserInfo] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
-  const [hasSentOTP, setHasSentOTP] = useState(false);
   const [authErrorMessages, setAuthErrorMessages] = useState({});
   const [axiosErrorMessage, setAxiosErrorMessage] = useState("");
   const [isRegistrationReqSent, setisRegistrationReqSent] = useState(false);
@@ -163,7 +162,7 @@ export const useAuth = () => {
     setIsAuthenticating(true);
 
     try {
-      const response = await apiClient.post(`/users/auth/register/`, {
+      const response = await apiClient.post(`/users/auth/registration/`, {
         name: userData.name,
         email: userData.email,
         username: userData.username,
@@ -171,41 +170,8 @@ export const useAuth = () => {
         password2: userData.password,
       });
 
-      if (response.status === 201) {
-        // Registration successfull
-        setisRegistrationReqSent(true);
-        setIsAuthenticating(false);
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data;
-        const errorMSG = Object.values(errorData).flat().join(", ");
-        setAuthErrorMessages(errorData);
-        setAxiosErrorMessage(error.message);
-        toast.error(errorMSG || "An unexpected error occurred", {
-          position: "top-center",
-        });
-      } else {
-        setAxiosErrorMessage(error.message || "Unknown error");
-        toast.error("An unexpected error occurred", { position: "top-center" });
-      }
-    } finally {
-      setIsAuthenticating(false);
-    }
-  };
-
-  const verifyEmail = async (otp) => {
-    setIsAuthenticating(true);
-
-    try {
-      const response = await apiClient.post(`/users/auth/verify/email/`, {
-        otp,
-      });
-
       if (response.status === 200) {
-        // Email confirmation successful
+        setisRegistrationReqSent(true);
         const userData = response.data;
 
         setCookie(
@@ -231,83 +197,39 @@ export const useAuth = () => {
         );
 
         setUserInfo({
-          user: { id: userData.user.id },
+          user: {
+            id: userData.user.id,
+            // stats: userData.user.stats,
+            // email: userData.user.email,
+            // date_joined: userData.user.date_joined,
+            // name: userData.user.name,
+            // username: userData.user.username,
+            // bio: userData.user.bio,
+            // location: userData.user.location,
+            // picture: userData.user.picture,
+            // is_private: userData.user.is_private,
+          },
         });
 
         setIsLoginSuccessful(true);
-        toast.success("Email confirmed successfully", {
-          position: "top-center",
-        });
       }
     } catch (error) {
+      console.error("Error during registration:", error);
+
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data;
+        const errorMSG = Object.values(errorData).flat().join(", ");
+        setAuthErrorMessages(errorData);
+        setAxiosErrorMessage(error.message);
+        toast.error(errorMSG || "An unexpected error occurred", {
+          position: "top-center",
+        });
+      } else {
+        setAxiosErrorMessage(error.message || "Unknown error");
+        toast.error("An unexpected error occurred", { position: "top-center" });
+      }
+    } finally {
       setIsAuthenticating(false);
-      if (isAxiosError(error)) setAuthErrorMessages(error.response?.data);
-    }
-    setIsAuthenticating(false);
-  };
-
-  const resendOTP = async (email, OTPType) => {
-    try {
-      const response = await apiClient.post(`/users/auth/resend_otp/`, {
-        email,
-        purpose: OTPType,
-      });
-
-      if (response.status === 200) {
-        setHasSentOTP(true);
-        console.log("HAS SENT OTP:", hasSentOTP);
-        toast.success("OTP resent successfully", { position: "top-center" });
-      }
-    } catch (error) {
-      console.error("Error during OTP resend:", error);
-
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data;
-        const errorMSG = Object.values(errorData).flat().join(", ");
-        setAuthErrorMessages(errorData);
-        setAxiosErrorMessage(error.message);
-        toast.error(errorMSG || "An unexpected error occurred", {
-          position: "top-center",
-        });
-      } else {
-        setAxiosErrorMessage(error.message || "Unknown error");
-        toast.error("An unexpected error occurred", { position: "top-center" });
-      }
-    }
-  };
-
-  /**
-   * Requests a password reset OTP for the given email.
-   * @param {string} email - User's email address
-   * @returns {Promise<void>}
-   */
-  const requestPwdResetOTP = async (email) => {
-    try {
-      const response = await apiClient.post(`/users/auth/password/reset/`, {
-        email,
-      });
-
-      if (response.status === 200) {
-        setHasSentOTP(true);
-        toast.success("Password reset OTP sent successfully", {
-          position: "top-center",
-        });
-      }
-    } catch (error) {
-      console.error("Error during password reset OTP request:", error);
-
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data;
-        const errorMSG = Object.values(errorData).flat().join(", ");
-        setAuthErrorMessages(errorData);
-        setAxiosErrorMessage(error.message);
-        toast.error(errorMSG || "An unexpected error occurred", {
-          position: "top-center",
-        });
-      } else {
-        setAxiosErrorMessage(error.message || "Unknown error");
-        toast.error("An unexpected error occurred", { position: "top-center" });
-      }
     }
   };
 
@@ -397,11 +319,7 @@ export const useAuth = () => {
     isLoginSuccessful,
     isLoadingUserInfo,
     isRegistrationReqSent,
-    verifyEmail,
-    resendOTP,
-    requestPwdResetOTP,
     resetPassword,
     isResetPasswordSuccessful,
-    hasSentOTP,
   };
 };
