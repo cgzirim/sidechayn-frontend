@@ -17,7 +17,6 @@ const Register = () => {
     isRegistrationReqSent,
     isLoginSuccessful,
     isAuthenticating,
-    authErrorMessages,
   } = useAuth();
   const [showVerifyNoticeModal, setShowVerifyNoticeModal] = useState(false);
 
@@ -34,18 +33,19 @@ const Register = () => {
     await register(formData);
   };
 
+  const handleCloseNoticeModal = () => {
+    if (isLoginSuccessful) {
+      navigate("/", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
+    }
+  };
+
   useEffect(() => {
     if (isRegistrationReqSent) {
       setShowVerifyNoticeModal(true);
     }
-  }, [isRegistrationReqSent]);
-
-  useEffect(() => {
-    if (isLoginSuccessful) {
-      setShowVerifyNoticeModal(true);
-      // navigate("/", { replace: true });
-    }
-  }, [isLoginSuccessful]);
+  }, [isRegistrationReqSent, isLoginSuccessful]);
 
   return (
     <div className="register py-10 flex justify-center items-center h-screen">
@@ -171,10 +171,7 @@ const Register = () => {
       </div>
       <VerifyEmailNoticeModal
         isVisible={showVerifyNoticeModal}
-        onClose={() => {
-          setShowVerifyNoticeModal(false);
-          navigate("/", { replace: true });
-        }}
+        onClose={handleCloseNoticeModal}
       />
     </div>
   );
