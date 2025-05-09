@@ -4,7 +4,7 @@ import userAvatar from "../../assets/user-avatar.jpg";
 import UserCard from "../user-card";
 import UploadsSection from "./UploadsSection";
 import SongShowcase from "./SongShowcase";
-import DJSongList from "./DJSongList";
+import UserSongList from "./DJSongList";
 import useAuthUser from "../../api/hooks/useAuthUser";
 import ProfileCardHeader from "./ProfileCardHeader";
 
@@ -79,7 +79,14 @@ const DJProfile = () => {
             </div>
 
             {/* Songs & Last Active */}
-            <DJSongList />
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <UserSongList />
+
+              <div className="bg-[#161616] rounded-xl p-6 text-center">
+                <p className="text-gray-400 text-sm">Last Active</p>
+              </div>
+            </div>
           </div>
         );
       case "Playlists":
