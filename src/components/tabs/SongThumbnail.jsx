@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import useMusicStore from "../../stores/useMusicStore";
 
@@ -11,6 +11,12 @@ const SongThumbnail = ({ song }) => {
   const [isPlaying, setIsPlaying] = useState(
     currentPlayingSong ? currentPlayingSong.id === song.id || false : false
   );
+
+  useEffect(() => {
+    setIsPlaying(
+      currentPlayingSong ? currentPlayingSong.id === song.id || false : false
+    );
+  }, [currentPlayingSong]);
 
   return (
     <div className="flex justify-start items-center gap-3 group/thumbnail">
