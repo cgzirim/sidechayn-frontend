@@ -213,6 +213,7 @@ export const useAuth = () => {
 
         setIsLoginSuccessful(true);
       }
+      setIsLoginSuccessful(true);
     } catch (error) {
       console.error("Error during registration:", error);
 
