@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaPlay, FaPause } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaPlay, FaPause } from "react-icons/fa6";
+
 import { Link } from "react-router-dom";
 import useSongs from "../../api/hooks/songs/useSongs";
 import LoadingState from "../States/LoadingState";
@@ -11,9 +13,10 @@ import SaveButton from "./SaveButton";
 import ViewsButton from "./ViewsButton";
 import LikesButton from "./LikesButton";
 import useMusicStore from "../../stores/useMusicStore";
+import { formatDistanceToNow } from "date-fns";
 
 const MusicPlayer = ({ bar }) => {
-  const { setCurrentPlayingSong } = useMusicStore();
+  const { setCurrentPlayingSong, currentPlayingSong } = useMusicStore();
 
   const { data: songs, isLoading, isError } = useSongs();
 
@@ -108,7 +111,11 @@ const MusicPlayer = ({ bar }) => {
         playAudio();
       }
     }
-  }, [currentIndex, tracks]);
+  }, [
+    currentIndex,
+    tracks,
+    // currentPlayingSong
+  ]);
 
   useEffect(() => {
     if (currentTrack) {
@@ -122,7 +129,7 @@ const MusicPlayer = ({ bar }) => {
 
       setCurrentPlayingSong(currentTrack);
     }
-  }, [currentTrack]);
+  }, [currentTrack, currentPlayingSong]);
 
   if (isLoading) return <LoadingState />;
   if (isError || tracks.length === 0)
@@ -211,7 +218,10 @@ const MusicPlayer = ({ bar }) => {
                 {currentTrack.artist?.name}
               </h3>
               <p className="text-[13px] text-[#969597]">
-                Uploaded {currentTrack.release_date}
+                Uploaded{" "}
+                {formatDistanceToNow(new Date(currentTrack.uploaded_at), {
+                  addSuffix: true,
+                })}
               </p>
             </div>
           </div>
@@ -262,9 +272,9 @@ const MusicPlayer = ({ bar }) => {
           >
             <button
               onClick={togglePlay}
-              className=" bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
+              className="text-white px-4 py-2 rounded-full text-sm font-semibold"
             >
-              {isPlaying ? <FaPause /> : <FaPlay />}
+              {isPlaying ? <FaPause size={52} /> : <FaPlay size={52} />}
             </button>
           </div>
         </div>
