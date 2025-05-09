@@ -26,7 +26,7 @@ const LikesButton = ({ likes, songId, isLiked, setIsLiked, setLikes }) => {
       onClick={toggleLike}
       className={`cursor-pointer px-3 py-1 rounded-[40px] flex items-center gap-2 border ${
         isLiked
-          ? "bg-[#2a0e0e] border-[#ff4d4d]"
+          ? "bg-[#0e1a2a] border-[#3daeff]"
           : "bg-[#0e0e0e] hover:bg-[#353535] border-[#353535]"
       }`}
     >
@@ -36,12 +36,12 @@ const LikesButton = ({ likes, songId, isLiked, setIsLiked, setLikes }) => {
         className="w-[19px] h-[19px]"
         style={{
           filter: isLiked
-            ? "brightness(0) saturate(100%) invert(28%) sepia(89%) saturate(748%) hue-rotate(335deg) brightness(97%) contrast(107%)"
+            ? "brightness(0) saturate(100%) invert(51%) sepia(71%) saturate(558%) hue-rotate(175deg) brightness(102%) contrast(101%)"
             : "none",
         }}
       />
       <span
-        className={`text-sm ${isLiked ? "text-[#ff4d4d]" : "text-[#ffffff9c]"}`}
+        className={`text-sm ${isLiked ? "text-[#3daeff]" : "text-[#ffffff9c]"}`}
       >
         {likes}
       </span>

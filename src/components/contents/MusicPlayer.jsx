@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaPlay, FaPause } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaPlay, FaPause } from "react-icons/fa6";
+
 import { Link } from "react-router-dom";
 import useSongs from "../../api/hooks/songs/useSongs";
 import LoadingState from "../States/LoadingState";
@@ -10,8 +12,12 @@ import download from "../../assets/download.png";
 import SaveButton from "./SaveButton";
 import ViewsButton from "./ViewsButton";
 import LikesButton from "./LikesButton";
+import useMusicStore from "../../stores/useMusicStore";
+import { formatDistanceToNow } from "date-fns";
 
 const MusicPlayer = ({ bar }) => {
+  const { setCurrentPlayingSong, currentPlayingSong } = useMusicStore();
+
   const { data: songs, isLoading, isError } = useSongs();
 
   const tracks = songs?.results || [];
@@ -105,7 +111,11 @@ const MusicPlayer = ({ bar }) => {
         playAudio();
       }
     }
-  }, [currentIndex, tracks]);
+  }, [
+    currentIndex,
+    tracks,
+    // currentPlayingSong
+  ]);
 
   useEffect(() => {
     if (currentTrack) {
@@ -116,8 +126,10 @@ const MusicPlayer = ({ bar }) => {
 
       setIsSaved(currentTrack.i_saved || false);
       setIsLiked(currentTrack.i_liked || false);
+
+      setCurrentPlayingSong(currentTrack);
     }
-  }, [currentTrack]);
+  }, [currentTrack, currentPlayingSong]);
 
   if (isLoading) return <LoadingState />;
   if (isError || tracks.length === 0)
@@ -128,7 +140,7 @@ const MusicPlayer = ({ bar }) => {
     );
 
   return (
-    <div className="music-player xl:p-10 p-5 rounded-[30px] bg-[#0c0c0c] mt-5">
+    <div className="music-player xl:p-10 p-5 rounded-[30px] bg-[#0c0c0c] mt-5 group/parent">
       <audio
         ref={audioRef}
         src={currentTrack?.audio_file}
@@ -193,12 +205,6 @@ const MusicPlayer = ({ bar }) => {
                 </div>
               </div>
             </div>
-            <button
-              onClick={togglePlay}
-              className="ml-5 bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
-            >
-              {isPlaying ? <FaPause /> : <FaPlay />}
-            </button>
           </div>
 
           <div className="flex my-8 justify-start items-center gap-3">
@@ -212,7 +218,10 @@ const MusicPlayer = ({ bar }) => {
                 {currentTrack.artist?.name}
               </h3>
               <p className="text-[13px] text-[#969597]">
-                Uploaded {currentTrack.release_date}
+                Uploaded{" "}
+                {formatDistanceToNow(new Date(currentTrack.uploaded_at), {
+                  addSuffix: true,
+                })}
               </p>
             </div>
           </div>
@@ -250,12 +259,24 @@ const MusicPlayer = ({ bar }) => {
           </div>
         </div>
 
-        <div className="w-full xl:w-1/3">
+        <div className="w-full xl:w-1/3 h-[200px] relative">
           <img
             src={currentTrack.cover_image}
-            className="xl:w-full xl:h-full w-2/3 mx-auto"
+            className="xl:w-full xl:h-full w-2/3 mx-auto object-cover"
             alt="cover"
           />
+
+          <div
+            className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0
+          group-hover/parent:opacity-100 opacity-0 duration-300 bg-black/40"
+          >
+            <button
+              onClick={togglePlay}
+              className="text-white px-4 py-2 rounded-full text-sm font-semibold"
+            >
+              {isPlaying ? <FaPause size={52} /> : <FaPlay size={52} />}
+            </button>
+          </div>
         </div>
       </div>
     </div>

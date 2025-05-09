@@ -1,22 +1,16 @@
 import React from "react";
-import albumCover from "../../assets/album-cover.jpg";
-import userAvatar from "../../assets/user-avatar.jpg";
-import useMusicStore from "../../stores/useMusicStore";
 import useSongs from "../../api/hooks/songs/useSongs";
-import LoadingState from "../States/LoadingState";
-import EmptyState from "../States/EmptyState";
+import useMusicStore from "../../stores/useMusicStore";
 import splitDuration from "../../utils/splitDuration";
+import LoadingState from "../States/LoadingState";
+import Upvote from "./Upvote";
 
-const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
-  const { currentPlayingSong } = useMusicStore();
+const SimilarSongsToCurrentPlayingSong = ({ setTagVisible }) => {
+  const { currentPlayingSong, setCurrentPlayingSong } = useMusicStore();
 
-  const songGenre = currentPlayingSong ? currentPlayingSong.genre : "";
-
-  // console.log("currentPlayingSong => ", songGenre);
+  const songGenre = currentPlayingSong ? currentPlayingSong.genre.name : "";
 
   const { data: songs, isLoading } = useSongs({ genre: songGenre });
-
-  console.log("Songs for Genre => ", songs);
 
   if (isLoading) return <LoadingState />;
 
@@ -76,55 +70,55 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
         </h2>
         <table className="table mt-5 w-full">
           <tbody>
-            {songs.results.map((song, index) => (
-              <tr
-                key={index}
-                className="table-row hover:bg-[#1f1f1f] cursor-pointer hover:scale=[1.03] transition-all duration-300 ease-in-out"
-              >
-                <td className="text-center pr-4 py-4">
-                  <span>💎</span> <br />
-                  <span className="text-[#ffffff] text-sm">
-                    {song.total_upvotes}
-                  </span>
-                </td>
-                <td className="text-left py-4">
-                  <div className="flex justify-start items-center gap-3">
-                    <img
-                      src={song.cover_image}
-                      className="w-[65px] h-[65px] rounded-[20px]"
-                      alt=""
-                    />
-                    <div className="text">
-                      <h2 className="text-[#ffffff] text-sm text-[17px]">
-                        {song.title}
-                      </h2>
-                      <p className="text-[#ffffff9c] text-[15px]]">
-                        {song.artist.name}
-                      </p>
+            {songs.results.map((song, index) => {
+              return (
+                <tr
+                  onClick={() => setCurrentPlayingSong(song)}
+                  key={index}
+                  className="table-row hover:bg-[#1f1f1f] cursor-pointer hover:scale=[1.03] transition-all duration-300 ease-in-out"
+                >
+                  <td className="text-center pr-4 py-4">
+                    <Upvote song={song} />
+                  </td>
+                  <td className="text-left py-4">
+                    <div className="flex justify-start items-center gap-3">
+                      <img
+                        src={song.cover_image}
+                        className="w-[65px] h-[65px] rounded-[20px]"
+                        alt=""
+                      />
+                      <div className="text">
+                        <h2 className="text-[#ffffff] text-sm text-[17px]">
+                          {song.title}
+                        </h2>
+                        <p className="text-[#ffffff9c] text-[15px]]">
+                          {song.artist.name}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="text-left py-4">
-                  <div className="flex justify-start items-center gap-3">
-                    <img
-                      src={song.artist.picture}
-                      className="w-[35px] h-[35px] rounded-full"
-                      alt=""
-                    />
-                    <div className="text">
-                      <h2 className="text-[#a8a8a8] text-sm text-[15px]">
-                        {song.artist.username}
-                      </h2>
+                  </td>
+                  <td className="text-left py-4">
+                    <div className="flex justify-start items-center gap-3">
+                      <img
+                        src={song.artist.picture}
+                        className="w-[35px] h-[35px] rounded-full"
+                        alt=""
+                      />
+                      <div className="text">
+                        <h2 className="text-[#a8a8a8] text-sm text-[15px]">
+                          {song.artist.username}
+                        </h2>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="text-left py-4">
-                  <p className="text-[#a8a8a8] text-[15px]">
-                    {splitDuration(song.duration)}
-                  </p>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="text-left py-4">
+                    <p className="text-[#a8a8a8] text-[15px]">
+                      {splitDuration(song.duration)}
+                    </p>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
