@@ -16,6 +16,7 @@ const Register = () => {
     register,
     isRegistrationReqSent,
     isLoginSuccessful,
+    isAuthenticating,
     authErrorMessages,
   } = useAuth();
   const [showVerifyNoticeModal, setShowVerifyNoticeModal] = useState(false);
@@ -42,7 +43,7 @@ const Register = () => {
   useEffect(() => {
     if (isLoginSuccessful) {
       setShowVerifyNoticeModal(true);
-      navigate("/", { replace: true });
+      // navigate("/", { replace: true });
     }
   }, [isLoginSuccessful]);
 
@@ -146,8 +147,13 @@ const Register = () => {
               </div>
               {/* submit */}
               <div className="col-span-2">
-                <button className="btn btn-primary bg-[#5634FE] text-white w-full px-6 py-2 rounded-md cursor-pointer">
-                  Register
+                <button
+                  disabled={isAuthenticating}
+                  className="btn btn-primary bg-[#5634FE] text-white w-full px-6 py-2 
+                rounded-md cursor-pointer 
+                disabled:cursor-not-allowed disabled:bg-gray-600"
+                >
+                  {isAuthenticating ? "Loading..." : "Register"}
                 </button>
               </div>
               <span className="text-xs text-gray-400 col-span-2">
@@ -167,6 +173,7 @@ const Register = () => {
         isVisible={showVerifyNoticeModal}
         onClose={() => {
           setShowVerifyNoticeModal(false);
+          navigate("/", { replace: true });
         }}
       />
     </div>
