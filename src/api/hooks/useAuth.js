@@ -170,7 +170,7 @@ export const useAuth = () => {
         password2: userData.password,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setisRegistrationReqSent(true);
         const userData = response.data;
 
