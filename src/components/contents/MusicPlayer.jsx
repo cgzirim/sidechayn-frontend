@@ -133,7 +133,7 @@ const MusicPlayer = ({ bar }) => {
     );
 
   return (
-    <div className="music-player xl:p-10 p-5 rounded-[30px] bg-[#0c0c0c] mt-5">
+    <div className="music-player xl:p-10 p-5 rounded-[30px] bg-[#0c0c0c] mt-5 group/parent">
       <audio
         ref={audioRef}
         src={currentTrack?.audio_file}
@@ -198,12 +198,6 @@ const MusicPlayer = ({ bar }) => {
                 </div>
               </div>
             </div>
-            <button
-              onClick={togglePlay}
-              className="ml-5 bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
-            >
-              {isPlaying ? <FaPause /> : <FaPlay />}
-            </button>
           </div>
 
           <div className="flex my-8 justify-start items-center gap-3">
@@ -255,12 +249,24 @@ const MusicPlayer = ({ bar }) => {
           </div>
         </div>
 
-        <div className="w-full xl:w-1/3">
+        <div className="w-full xl:w-1/3 h-[200px] relative">
           <img
             src={currentTrack.cover_image}
             className="xl:w-full xl:h-full w-2/3 mx-auto object-cover"
             alt="cover"
           />
+
+          <div
+            className="absolute flex items-center justify-center top-0 right-0 left-0 bottom-0
+          group-hover/parent:opacity-100 opacity-0 duration-300 bg-black/40"
+          >
+            <button
+              onClick={togglePlay}
+              className=" bg-white text-black px-4 py-2 rounded-full text-sm font-semibold"
+            >
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </button>
+          </div>
         </div>
       </div>
     </div>

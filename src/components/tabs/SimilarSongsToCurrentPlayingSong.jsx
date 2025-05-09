@@ -1,22 +1,17 @@
 import React from "react";
-import albumCover from "../../assets/album-cover.jpg";
-import userAvatar from "../../assets/user-avatar.jpg";
-import useMusicStore from "../../stores/useMusicStore";
 import useSongs from "../../api/hooks/songs/useSongs";
-import LoadingState from "../States/LoadingState";
-import EmptyState from "../States/EmptyState";
+import useMusicStore from "../../stores/useMusicStore";
 import splitDuration from "../../utils/splitDuration";
+import LoadingState from "../States/LoadingState";
 
 const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
   const { currentPlayingSong } = useMusicStore();
 
-  const songGenre = currentPlayingSong ? currentPlayingSong.genre : "";
+  const songGenre = currentPlayingSong ? currentPlayingSong.genre.name : "";
 
-  console.log("currentPlayingSong => ", songGenre);
+  console.log("GENRE => ", songGenre);
 
   const { data: songs, isLoading } = useSongs({ genre: songGenre });
-
-  console.log("Songs for Genre => ", songs);
 
   if (isLoading) return <LoadingState />;
 
