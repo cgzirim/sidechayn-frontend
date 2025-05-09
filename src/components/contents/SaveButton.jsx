@@ -5,6 +5,7 @@ import i4 from "../../assets/i4.webp";
 import apiClient from "../../api/apiClient";
 import { useAuth } from "../../api/hooks/useAuth";
 import { toast } from "sonner";
+import protectedMsg from "../../utils/protectedMsg";
 
 const SaveButton = ({ saves, setSaves, setIsSaved, isSaved, songId }) => {
   const { isAuthenticated } = useAuth();
@@ -12,7 +13,7 @@ const SaveButton = ({ saves, setSaves, setIsSaved, isSaved, songId }) => {
 
   const toggleSave = async () => {
     if (!isAuth) {
-      return toast.message("Authentication is required to save a song");
+      return toast.message(protectedMsg("save"));
     }
     const newIsSaved = !isSaved;
     setIsSaved(newIsSaved);

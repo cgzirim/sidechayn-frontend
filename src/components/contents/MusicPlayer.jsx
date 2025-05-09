@@ -33,7 +33,7 @@ const MusicPlayer = ({ bar }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const currentTrack = tracks[currentIndex];
+  const currentTrack = currentPlayingSong || tracks[currentIndex];
 
   const playAudio = () => {
     if (audioRef.current) {
@@ -111,11 +111,7 @@ const MusicPlayer = ({ bar }) => {
         playAudio();
       }
     }
-  }, [
-    currentIndex,
-    tracks,
-    // currentPlayingSong
-  ]);
+  }, [currentIndex, tracks, currentPlayingSong]);
 
   useEffect(() => {
     if (currentTrack) {

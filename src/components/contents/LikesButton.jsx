@@ -3,6 +3,7 @@ import i2 from "../../assets/i2.webp";
 import apiClient from "../../api/apiClient";
 import { useAuth } from "../../api/hooks/useAuth";
 import { toast } from "sonner";
+import protectedMsg from "../../utils/protectedMsg";
 
 const LikesButton = ({ likes, songId, isLiked, setIsLiked, setLikes }) => {
   const { isAuthenticated } = useAuth();
@@ -10,7 +11,7 @@ const LikesButton = ({ likes, songId, isLiked, setIsLiked, setLikes }) => {
 
   const toggleLike = async () => {
     if (!isAuth) {
-      return toast.message("Authentication is required to like a song");
+      return toast.message(protectedMsg("like"));
     }
 
     const newIsLiked = !isLiked;

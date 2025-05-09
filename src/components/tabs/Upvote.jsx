@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../../api/apiClient";
+import protectedMsg from "../../utils/protectedMsg";
+import { useAuth } from "../../api/hooks/useAuth";
+import { toast } from "sonner";
 
 const Upvote = ({ song }) => {
   const [upvotes, setUpvotes] = useState(0);
-
   const [isUpvoted, setIsUpvoted] = useState(false);
 
+  const { isAuthenticated } = useAuth();
+  const isAuth = isAuthenticated();
+
   const toggleUpvote = async () => {
+    if (!isAuth) {
+      return toast.message(protectedMsg("upvote"));
+    }
+
     const newIsUpvoted = !isUpvoted;
     setIsUpvoted(newIsUpvoted);
     setUpvotes((prev) => prev + (newIsUpvoted ? 1 : -1));
