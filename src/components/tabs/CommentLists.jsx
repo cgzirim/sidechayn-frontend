@@ -3,6 +3,7 @@ import dotsIcon from "../../assets/dots.png";
 import userAvatar from "../../assets/user-avatar.jpg";
 import useComments from "../../api/hooks/comments/useComments";
 import LoadindState from "../States/LoadingState";
+import { formatDistanceToNow } from "date-fns";
 
 // comments
 const allComments = [
@@ -107,7 +108,9 @@ const CommentLists = () => {
                   </h3>
                   <div className="dot w-1.5 h-1.5 bg-[#686868] rounded-full"></div>
                   <h4 className="text-lg text-[#686868]">
-                    {new Date(comment.created_at).toLocaleDateString()}
+                    {formatDistanceToNow(new Date(comment.created_at), {
+                      addSuffix: true,
+                    })}
                   </h4>
                 </div>
 
