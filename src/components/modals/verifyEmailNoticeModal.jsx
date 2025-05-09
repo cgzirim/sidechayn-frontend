@@ -2,7 +2,7 @@ const VerifyEmailNoticeModal = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
       <div className="bg-[#1e1e1e] text-white p-8 rounded-lg max-w-sm w-full">
         <h2 className="text-lg font-semibold mb-4">Verify Your Email</h2>
         <p className="text-sm mb-6">
