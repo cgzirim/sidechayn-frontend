@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../api/hooks/useAuth";
-import OTPModal from "../otpModal";
 
 import "./login-modal.css";
 
@@ -371,12 +370,6 @@ const LoginModal = ({
                   </span>
                 </form>
               </div>
-
-              <OTPModal
-                isVisible={isOtpModalVisible}
-                handleClose={() => setOtpModalVisible(false)}
-                onVerifyOTP={handleVerifyOTP}
-              />
             </div>
           </>
         )}

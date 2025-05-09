@@ -54,11 +54,12 @@ const Login = () => {
     <div className="login py-10 flex justify-center items-center h-screen">
       <div className="container">
         <div className="card w-5xl max-w-full mx-auto rounded-[20px] bg-[#232323] p-10">
-          <Link to="/register">
-            <button className="btn btn-primary bg-[#5634FE] text-white w-full px-6 py-2 rounded-md">
-              Don’t have an account? <b className="cursor-pointer">Register</b>
-            </button>
-          </Link>
+          <button
+            onClick={() => navigate("/register")}
+            className="btn btn-primary bg-[#5634FE] text-white w-full px-6 py-2 rounded-md cursor-pointer"
+          >
+            Don’t have an account? <b className="cursor-pointer">Register</b>
+          </button>
 
           <div className="mt-6">
             <p className="text-gray-400">Login with:</p>
