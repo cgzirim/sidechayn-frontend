@@ -212,6 +212,7 @@ export const useAuth = () => {
         });
 
         setIsLoginSuccessful(true);
+        toast.success("Registration successful", { position: "top-center" });
       }
       setIsLoginSuccessful(true);
     } catch (error) {
