@@ -3,11 +3,6 @@ import { create } from "zustand";
 const useMusicStore = create((set, get) => ({
   currentIndex: 0,
   isPlaying: false,
-  progress: 0,
-  shares: 0,
-  likes: 0,
-  views: 0,
-  saves: 0,
   currentPlayingSong: null,
 
   setCurrentPlayingSong: (song) =>

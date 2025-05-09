@@ -12,7 +12,7 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible, searchedSongs }) => {
 
   const songGenre = currentPlayingSong ? currentPlayingSong.genre : "";
 
-  // console.log("currentPlayingSong => ", songGenre);
+  console.log("currentPlayingSong => ", songGenre);
 
   const { data: songs, isLoading } = useSongs({ genre: songGenre });
 

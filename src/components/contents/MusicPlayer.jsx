@@ -10,8 +10,11 @@ import download from "../../assets/download.png";
 import SaveButton from "./SaveButton";
 import ViewsButton from "./ViewsButton";
 import LikesButton from "./LikesButton";
+import useMusicStore from "../../stores/useMusicStore";
 
 const MusicPlayer = ({ bar }) => {
+  const { setCurrentPlayingSong } = useMusicStore();
+
   const { data: songs, isLoading, isError } = useSongs();
 
   const tracks = songs?.results || [];
@@ -116,6 +119,8 @@ const MusicPlayer = ({ bar }) => {
 
       setIsSaved(currentTrack.i_saved || false);
       setIsLiked(currentTrack.i_liked || false);
+
+      setCurrentPlayingSong(currentTrack);
     }
   }, [currentTrack]);
 
@@ -253,7 +258,7 @@ const MusicPlayer = ({ bar }) => {
         <div className="w-full xl:w-1/3">
           <img
             src={currentTrack.cover_image}
-            className="xl:w-full xl:h-full w-2/3 mx-auto"
+            className="xl:w-full xl:h-full w-2/3 mx-auto object-cover"
             alt="cover"
           />
         </div>
