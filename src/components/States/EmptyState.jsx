@@ -1,6 +1,6 @@
 import React from "react";
 
-const SiEmptyState = ({ children }) => {
+const EmptyState = ({ children }) => {
   return (
     <div className="flex items-center justify-center h-full">
       <p className="text-gray-500">{children}</p>
@@ -8,4 +8,4 @@ const SiEmptyState = ({ children }) => {
   );
 };
 
-export default SiEmptyState;
+export default EmptyState;

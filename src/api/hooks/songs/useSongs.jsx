@@ -3,7 +3,7 @@ import apiClient from "../../apiClient";
 import { useQuery } from "@tanstack/react-query";
 
 const useSongs = (config) => {
-  const { searchTerm, limit, genre } = config || {};
+  const { searchTerm, limit, genre, artist } = config || {};
   return useQuery({
     queryKey: ["songs", config],
     queryFn: () =>
@@ -13,6 +13,7 @@ const useSongs = (config) => {
             search: searchTerm,
             limit: limit,
             genre: genre,
+            artist: artist,
           },
         })
         .then((res) => res.data),

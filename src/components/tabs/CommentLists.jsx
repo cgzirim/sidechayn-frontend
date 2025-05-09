@@ -4,6 +4,7 @@ import userAvatar from "../../assets/user-avatar.jpg";
 import useComments from "../../api/hooks/comments/useComments";
 import LoadindState from "../States/LoadingState";
 import { formatDistanceToNow } from "date-fns";
+import ButtonDotted from "../buttons/ButtonDotted";
 
 // comments
 const allComments = [
@@ -239,13 +240,7 @@ const CommentLists = () => {
               )} */}
               </div>
             </div>
-            <button className="">
-              <img
-                src={dotsIcon}
-                alt=""
-                className="w-[28px] hover:scale-[1.01]"
-              />
-            </button>
+            <ButtonDotted />
           </div>
         ))}
       </div>

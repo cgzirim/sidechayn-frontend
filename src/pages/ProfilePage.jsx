@@ -14,18 +14,18 @@ const Profile = () => {
 
   const isAuth = isAuthenticated();
 
-  const [mobileSidebar, setMobileSidebar] = React.useState(true);
+  const [mobileSidebar, setMobileSidebar] = useState(true);
   const handleMobileSidebar = () => {
     setMobileSidebar(!mobileSidebar);
   };
 
-  const [bar, setBar] = React.useState(true);
+  const [bar, setBar] = useState(true);
   const handleBar = () => {
     setBar(!bar);
   };
 
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [activeModal, setActiveModal] = React.useState("login");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeModal, setActiveModal] = useState("login");
   const handleClose = () => {
     setModalVisible(false);
   };

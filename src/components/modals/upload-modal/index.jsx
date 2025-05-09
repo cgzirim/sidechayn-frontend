@@ -122,10 +122,9 @@ const UploadModal = ({
           ...bearer,
         },
       });
-      console.log("createdSong => ", createdSong);
       queryClient.invalidateQueries({ queryKey: ["songs"] });
       hideLoading();
-      navigate("/explore");
+      navigate("/profile");
     } catch (err) {
       setIsCreatingSong(false);
       console.log("Something went wrong", err);
