@@ -4,6 +4,8 @@ import useMusicStore from "../../stores/useMusicStore";
 import splitDuration from "../../utils/splitDuration";
 import LoadingState from "../States/LoadingState";
 import Upvote from "./Upvote";
+import { FaPause, FaPlay } from "react-icons/fa6";
+import SongThumbnail from "./SongThumbnail";
 
 const SimilarSongsToCurrentPlayingSong = ({ setTagVisible }) => {
   const { currentPlayingSong, setCurrentPlayingSong } = useMusicStore();
@@ -73,7 +75,6 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible }) => {
             {songs.results.map((song, index) => {
               return (
                 <tr
-                  onClick={() => setCurrentPlayingSong(song)}
                   key={index}
                   className="table-row hover:bg-[#1f1f1f] cursor-pointer hover:scale=[1.03] transition-all duration-300 ease-in-out"
                 >
@@ -81,21 +82,7 @@ const SimilarSongsToCurrentPlayingSong = ({ setTagVisible }) => {
                     <Upvote song={song} />
                   </td>
                   <td className="text-left py-4">
-                    <div className="flex justify-start items-center gap-3">
-                      <img
-                        src={song.cover_image}
-                        className="w-[65px] h-[65px] rounded-[20px]"
-                        alt=""
-                      />
-                      <div className="text">
-                        <h2 className="text-[#ffffff] text-sm text-[17px]">
-                          {song.title}
-                        </h2>
-                        <p className="text-[#ffffff9c] text-[15px]]">
-                          {song.artist.name}
-                        </p>
-                      </div>
-                    </div>
+                    <SongThumbnail song={song} />
                   </td>
                   <td className="text-left py-4">
                     <div className="flex justify-start items-center gap-3">

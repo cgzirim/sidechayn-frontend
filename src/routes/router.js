@@ -7,50 +7,59 @@ import Profile from "../pages/ProfilePage";
 import ErrorPage from "../pages/ErrorPage";
 import ComingSoon from "../pages/ComingSoon";
 import Playlist from "../pages/PlaylistPage";
+import PrivateRoutes from "../pages/PrivateRoutes";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <Homepage />
-    },
-    {
-        path: '/explore',
-        element: <Explore />
-    },
-    {
-        path: '/login',
-        element: <Login />
-    },
-    {
-        path: '/register',
-        element: <Register />
-    },
-    {
-        path: '/profile',
-        element: <Profile />
-    },
-    {
-        path: '/saved-tracks',
-        element: <ComingSoon />
-    },
-    {
-        path: '/achievements',
-        element: <ComingSoon />
-    },
-    {
-        path: '/settings',
-        element: <ComingSoon />
-    },
-    {
-        path: '/playlist',
-        element: <Playlist />
-    },
-    {
-        path: '/playlist/:id',
-        element: <ComingSoon />
-    },
-    {
-        path: '*',
-        element: <ErrorPage />,
-    }
-])
+  {
+    path: "/",
+    element: <Homepage />,
+  },
+  {
+    path: "/explore",
+    element: <Explore />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+
+  {
+    path: "/saved-tracks",
+    element: <ComingSoon />,
+  },
+  {
+    path: "/achievements",
+    element: <ComingSoon />,
+  },
+
+  {
+    path: "/playlist",
+    element: <Playlist />,
+  },
+  {
+    path: "/playlist/:id",
+    element: <ComingSoon />,
+  },
+  {
+    element: <PrivateRoutes />,
+    children: [
+      {
+        path: "/settings",
+        element: <ComingSoon />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+    ],
+  },
+
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
+]);

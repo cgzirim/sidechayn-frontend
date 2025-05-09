@@ -4,13 +4,23 @@ import { IoSend } from "react-icons/io5";
 import apiClient from "../../api/apiClient";
 import useAuthUser from "../../api/hooks/useAuthUser";
 import useMusicStore from "../../stores/useMusicStore";
+import { useAuth } from "../../api/hooks/useAuth";
+import { toast } from "sonner";
+import protectedMsg from "../../utils/protectedMsg";
 
 const CreateCommentForm = () => {
+  const { isAuthenticated } = useAuth();
+  const isAuth = isAuthenticated();
+
   const { handleSubmit, register } = useForm();
   const { data: userInfo, isLoading: isLoadingUser } = useAuthUser();
   const { currentPlayingSong } = useMusicStore();
 
   const onSubmit = async (formValues) => {
+    if (!isAuth) {
+      return toast.message(protectedMsg("comment on a"));
+    }
+
     console.log("formValues", formValues, userInfo);
 
     const createdComment = await apiClient.post("comments/", {

@@ -3,9 +3,18 @@ import useMusicStore from "../../stores/useMusicStore";
 
 import i4 from "../../assets/i4.webp";
 import apiClient from "../../api/apiClient";
+import { useAuth } from "../../api/hooks/useAuth";
+import { toast } from "sonner";
+import protectedMsg from "../../utils/protectedMsg";
 
 const SaveButton = ({ saves, setSaves, setIsSaved, isSaved, songId }) => {
+  const { isAuthenticated } = useAuth();
+  const isAuth = isAuthenticated();
+
   const toggleSave = async () => {
+    if (!isAuth) {
+      return toast.message(protectedMsg("save"));
+    }
     const newIsSaved = !isSaved;
     setIsSaved(newIsSaved);
     setSaves((prev) => prev + (newIsSaved ? 1 : -1));
