@@ -170,7 +170,7 @@ export const useAuth = () => {
         password2: userData.password,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setisRegistrationReqSent(true);
         const userData = response.data;
 
@@ -212,6 +212,7 @@ export const useAuth = () => {
         });
 
         setIsLoginSuccessful(true);
+        // toast.success("Registration successful", { position: "top-center" });
       }
       setIsLoginSuccessful(true);
     } catch (error) {
